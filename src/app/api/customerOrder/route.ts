@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const { orderData, userId } = await req.json();
 
     // Check for required fields
-    if (!orderData || !userId || !Array.isArray(orderData.selectedProducts)) {
+    if (!orderData || !userId || !Array.isArray(orderData.selectedProducts) || orderData.totalPrice == null) {
       return NextResponse.json({ error: 'Invalid order data or user ID' }, { status: 400 });
     }
 
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       .from('orders')
       .insert({
         user_id: userId,
-        total_price: orderData.totalPrice, // Make sure totalPrice is included in orderData
+        total_price: orderData.totalPrice, // Make sure totalPrice is included
         status: 'pending' // or another appropriate status
       })
       .select();
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     // Insert each product from the order into the `order_items` table
     const insertPromises = orderData.selectedProducts.map(async (product: any) => {
       const { data, error } = await supabase
-        .from('order_items') // Assuming you also have an order_items table for product details
+        .from('order_items')
         .insert({
           order_id: orderId,
           product_name: product.name,

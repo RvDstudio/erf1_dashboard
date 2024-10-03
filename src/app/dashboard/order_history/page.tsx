@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { createClient } from '@supabase/supabase-js';
 import Image from 'next/image';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'; // Import necessary components
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 type Product = {
   id: string;
@@ -16,24 +16,41 @@ type Product = {
   createdAt: string;
 };
 
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 export default function UserProducts() {
-  const { data: session, status } = useSession();
   const [products, setProducts] = useState<Product[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    if (session?.user) {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        setErrorMessage('Failed to retrieve session.');
+      } else {
+        setSession(data.session);
+      }
+    };
+
+    fetchSession();
+  }, []);
+
+  useEffect(() => {
+    if (session) {
       const fetchUserProducts = async () => {
         try {
-          const userId = session?.user?.id; // Use optional chaining to avoid undefined error
-          if (!userId) throw new Error('User ID is undefined.'); // Handle case where userId is not available
+          const userId = session.user?.id;
+          if (!userId) throw new Error('User ID is undefined.');
+
           const response = await fetch(`/api/userProducts?user_id=${userId}`);
           const data = await response.json();
 
-          console.log('API Response:', data); // Log the response for debugging
-
           if (response.ok && data.products) {
-            setProducts(data.products); // Set products state
+            setProducts(data.products);
           } else {
             setErrorMessage(data.error || 'Failed to fetch products.');
           }
@@ -43,16 +60,18 @@ export default function UserProducts() {
         }
       };
 
-      fetchUserProducts(); // Call the function directly
+      fetchUserProducts();
     }
   }, [session]);
+
+  console.debug('Products:', products);
 
   return (
     <div className="p-4 pt-16">
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       {products.length > 0 ? (
         <Table>
-          <TableCaption>A list of your products.</TableCaption>
+          <TableCaption>A list of your products, ordered by latest first.</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Image</TableHead>
@@ -60,6 +79,7 @@ export default function UserProducts() {
               <TableHead>Short Description</TableHead>
               <TableHead className="text-right">Price</TableHead>
               <TableHead className="text-right">Quantity</TableHead>
+              <TableHead className="text-right">Created At</TableHead> {/* Display Created At */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -78,6 +98,8 @@ export default function UserProducts() {
                 <TableCell>{product.short_description}</TableCell>
                 <TableCell className="text-right">{product.price}</TableCell>
                 <TableCell className="text-right">{product.quantity}</TableCell>
+                <TableCell className="text-right">{new Date(product.createdAt).toLocaleString()}</TableCell>{' '}
+                {/* Format Created At */}
               </TableRow>
             ))}
           </TableBody>
