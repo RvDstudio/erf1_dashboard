@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useOrder } from '@/context/OrderContext';
 import { useTotalPrice } from '@/context/TotalPriceContext'; // Use this to get total price
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
 
 export default function Order() {
   const { orderData, setOrderData } = useOrder();
