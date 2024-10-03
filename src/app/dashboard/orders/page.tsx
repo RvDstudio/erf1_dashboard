@@ -25,7 +25,7 @@ export default function Order() {
     };
 
     fetchSessionAndOrderData();
-  }, [setOrderData]);
+  }, [setOrderData, supabase.auth]);
 
   const handleOrderSubmit = async () => {
     if (!session) {

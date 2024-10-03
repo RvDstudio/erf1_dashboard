@@ -1,111 +1,93 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import Image from 'next/image';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { createClient } from '@/utils/supabase/client'; // Import Supabase client
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'; // Import necessary components
 
-type Product = {
+type Order = {
   id: string;
-  product_name: string;
-  description: string;
-  short_description: string;
-  quantity: string;
-  price: string;
-  image_url: string;
-  createdAt: string;
+  order_date: string;
+  total_price: number;
+  status: string;
 };
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-export default function UserProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
+export default function OrderHistory() {
+  const [orders, setOrders] = useState<Order[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        setErrorMessage('Failed to retrieve session.');
-      } else {
-        setSession(data.session);
+    const fetchOrderHistory = async () => {
+      try {
+        // Fetch current session to get user ID
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session?.user) {
+          setErrorMessage('User not authenticated');
+          return;
+        }
+
+        const userId = session.user.id;
+
+        // Fetch user's orders from the API
+        const response = await fetch(`/api/userOrders?user_id=${userId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setOrders(data.orders);
+        } else {
+          setErrorMessage(data.error || 'Failed to fetch orders.');
+        }
+      } catch (error) {
+        console.error('Error fetching order history:', error);
+        setErrorMessage('Error fetching order history.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchSession();
-  }, []);
-
-  useEffect(() => {
-    if (session) {
-      const fetchUserProducts = async () => {
-        try {
-          const userId = session.user?.id;
-          if (!userId) throw new Error('User ID is undefined.');
-
-          const response = await fetch(`/api/userProducts?user_id=${userId}`);
-          const data = await response.json();
-
-          if (response.ok && data.products) {
-            setProducts(data.products);
-          } else {
-            setErrorMessage(data.error || 'Failed to fetch products.');
-          }
-        } catch (error) {
-          console.error('Error fetching user products:', error);
-          setErrorMessage('Error fetching user products.');
-        }
-      };
-
-      fetchUserProducts();
-    }
-  }, [session]);
-
-  console.debug('Products:', products);
+    fetchOrderHistory();
+  }, [supabase.auth]);
 
   return (
-    <div className="p-4 pt-16">
+    <div className="p-4 pt-6">
+      <h1 className="text-2xl font-bold mb-4">Order History</h1>
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      {products.length > 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
         <Table>
-          <TableCaption>A list of your products, ordered by latest first.</TableCaption>
+          <TableCaption>A list of your orders.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Image</TableHead>
-              <TableHead>Product Name</TableHead>
-              <TableHead>Short Description</TableHead>
-              <TableHead className="text-right">Price</TableHead>
-              <TableHead className="text-right">Quantity</TableHead>
-              <TableHead className="text-right">Created At</TableHead> {/* Display Created At */}
+              <TableHead>Order ID</TableHead>
+              <TableHead>Order Date</TableHead>
+              <TableHead>Total Price</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product, index) => (
-              <TableRow key={product.id} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
-                <TableCell>
-                  <Image
-                    src={product.image_url}
-                    alt={product.product_name}
-                    width={50}
-                    height={50}
-                    className="rounded-md"
-                  />
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <TableRow key={order.id} className="hover:bg-gray-100">
+                  <TableCell>{order.id}</TableCell>
+                  <TableCell>{new Date(order.order_date).toLocaleDateString()}</TableCell>
+                  <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
+                  <TableCell>{order.status}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center">
+                  No orders found.
                 </TableCell>
-                <TableCell className="font-medium">{product.product_name}</TableCell>
-                <TableCell>{product.short_description}</TableCell>
-                <TableCell className="text-right">{product.price}</TableCell>
-                <TableCell className="text-right">{product.quantity}</TableCell>
-                <TableCell className="text-right">{new Date(product.createdAt).toLocaleString()}</TableCell>{' '}
-                {/* Format Created At */}
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
-      ) : (
-        <p>No products found.</p>
       )}
     </div>
   );
