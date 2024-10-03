@@ -17,18 +17,18 @@ export default async function OrderDetails({ params }: { params: { id: string } 
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Order Details</h1>
+      <h1 className="text-xl font-medium mb-4 text-[#374c69]">Order Details</h1>
       <p className="text-lg">
-        <strong>Order ID:</strong> {order.id}
+        <strong className="text-[#374c69]">Order ID:</strong> {order.id}
       </p>
-      <p className="text-lg">
+      <p className="text-[#374c69]">
         <strong>Total Price:</strong> €{order.total_price}
       </p>
-      <p className="text-lg">
+      <p className="text-[#374c69]">
         <strong>Status:</strong> {order.status}
       </p>
 
-      <h2 className="text-xl font-bold mt-6 mb-4">Items in this order</h2>
+      <h2 className="text-[#374c69] font-medium mt-3 mb-4">Items in this order</h2>
       {orderItems.length > 0 ? (
         <table className="min-w-full border-collapse block md:table">
           <thead className="block md:table-header-group">
