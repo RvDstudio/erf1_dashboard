@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client'; // Import Supabase client
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'; // Import necessary components
+import { Button } from '@/components/ui/button';
 
 type Order = {
   id: string;
@@ -20,7 +22,6 @@ export default function OrderHistory() {
   useEffect(() => {
     const fetchOrderHistory = async () => {
       try {
-        // Fetch current session to get user ID
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -31,8 +32,6 @@ export default function OrderHistory() {
         }
 
         const userId = session.user.id;
-
-        // Fetch user's orders from the API
         const response = await fetch(`/api/userOrders?user_id=${userId}`);
         const data = await response.json();
 
@@ -54,7 +53,7 @@ export default function OrderHistory() {
 
   return (
     <div className="p-4 pt-6">
-      <h1 className="text-2xl font-bold mb-4">Order History</h1>
+      <h1 className="text-xl font-medium mb-2">Order History</h1>
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       {loading ? (
         <p>Loading...</p>
@@ -72,8 +71,12 @@ export default function OrderHistory() {
           <TableBody>
             {orders.length > 0 ? (
               orders.map((order) => (
-                <TableRow key={order.id} className="hover:bg-gray-100">
-                  <TableCell>{order.id}</TableCell>
+                <TableRow key={order.id}>
+                  <TableCell>
+                    <Link href={`/dashboard/order_history/${order.id}`}>
+                      <Button className="text-white bg-[#374C69] hover:bg-[#374C69]/90">{order.id}</Button>
+                    </Link>
+                  </TableCell>
                   <TableCell>{new Date(order.order_date).toLocaleDateString()}</TableCell>
                   <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
                   <TableCell>{order.status}</TableCell>

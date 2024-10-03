@@ -74,7 +74,7 @@ export default function Order() {
           >
             <div className="flex items-center">
               <div className="w-full">
-                <img
+                <Image
                   className="h-[60px] w-[60px] md:w-[70px] md:h-[70px] rounded-lg"
                   src={product.images[0]?.src}
                   alt="product image"
