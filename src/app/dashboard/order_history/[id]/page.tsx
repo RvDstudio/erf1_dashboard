@@ -17,26 +17,26 @@ export default async function OrderDetails({ params }: { params: { id: string } 
 
   return (
     <div className="p-6">
-      <h1 className="text-xl font-medium mb-4 text-[#374c69]">Order Details</h1>
+      <h1 className="text-xl font-medium mb-4 text-[#374c69]">Bestelgegevens</h1>
       <p className="text-lg">
         <strong className="text-[#374c69]">Order ID:</strong> {order.id}
       </p>
       <p className="text-[#374c69]">
-        <strong>Total Price:</strong> €{order.total_price}
+        <strong>Totale Prijs:</strong> €{order.total_price}
       </p>
       <p className="text-[#374c69]">
         <strong>Status:</strong> {order.status}
       </p>
 
-      <h2 className="text-[#374c69] font-medium mt-3 mb-4">Items in this order</h2>
+      <h2 className="text-[#374c69] font-medium mt-3 mb-4">Producten in deze order</h2>
       {orderItems.length > 0 ? (
         <table className="min-w-full border-collapse block md:table">
           <thead className="block md:table-header-group">
             <tr className="border border-gray-300 md:table-row absolute -top-full md:relative">
-              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Image</th>
-              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Product Name</th>
-              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Quantity</th>
-              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Description</th>
+              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Afbeelding</th>
+              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Product Naam</th>
+              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Aantal</th>
+              <th className="bg-gray-100 p-2 text-left font-medium md:border md:border-gray-300">Beschrijving</th>
             </tr>
           </thead>
           <tbody className="block md:table-row-group">
