@@ -79,6 +79,8 @@ export default function Order() {
                   className="h-[60px] w-[60px] md:w-[70px] md:h-[70px] rounded-lg"
                   src={product.images[0]?.src}
                   alt="product image"
+                  width={70}
+                  height={70}
                 />
               </div>
             </div>

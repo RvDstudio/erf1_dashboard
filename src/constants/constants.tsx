@@ -1,11 +1,4 @@
-import {
-  BaggageClaim,
-  BlocksIcon,
-  Caravan,
-  Home,
-  ShoppingBag,
-  User,
-} from "lucide-react";
+import { BaggageClaim, BlocksIcon, Caravan, Home, ShoppingBag, User } from 'lucide-react';
 
 interface MenuItem {
   title: string;
@@ -18,48 +11,48 @@ interface MenuItem {
 
 export const Menus: MenuItem[] = [
   {
-    title: "Dashboard",
+    title: 'Dashboard',
     notification: 0,
     icon: <Home className="w-5 h-5" />,
-    path: "/dashboard",
+    path: '/dashboard',
   },
   {
-    title: "Profiel",
+    title: 'Profiel',
     notification: 0,
     icon: <User className="w-5 h-5" />,
-    path: "/dashboard/account",
+    path: '/dashboard/account',
   },
   {
-    title: "Producten",
+    title: 'Producten',
     notification: 0,
     icon: <ShoppingBag className="w-5 h-5" />,
-    path: "/dashboard/products",
+    path: '/dashboard/products',
   },
   {
-    title: "Producten toevoegen",
+    title: 'Producten toevoegen',
     notification: 0,
     icon: <ShoppingBag className="w-5 h-5" />,
-    path: "/dashboard/product-upload",
+    path: '/dashboard/product-upload',
     isAdmin: true, // Only visible to admin
   },
   {
-    title: "Orders",
+    title: 'Orders',
     notification: 0,
     icon: <BaggageClaim className="w-5 h-5" />,
-    path: "/subscriptions",
+    path: '/dashboard/order_history',
   },
   {
-    title: "Camperplekken",
+    title: 'Camperplekken',
     icon: <Caravan className="w-5 h-5" />,
     gap: false,
     notification: 0,
-    path: "/loyalty-cards",
+    path: '/loyalty-cards',
   },
   {
-    title: "Agro Diëtetiek",
+    title: 'Agro Diëtetiek',
     notification: 0,
     gap: false,
     icon: <BlocksIcon className="w-5 h-5" />,
-    path: "/debts",
+    path: '/debts',
   },
 ];

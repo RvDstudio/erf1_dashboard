@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'; // Import useRouter from next/navig
 import { useTotalPrice } from '@/context/TotalPriceContext';
 import { PlusIcon } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
+import { zuivel } from '@/types/types';
 
 interface ZuivelListProps {
   zuivel: Zuivel[];
