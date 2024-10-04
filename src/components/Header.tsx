@@ -1,38 +1,37 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Bell, Search } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "./ThemeToggle";
-import { createClient } from "@/utils/supabase/client"; // Client-side Supabase initialization
-import Link from "next/link";
-import { User } from '@/types/types'
-
+// Path: src\components\Header.tsx
+'use client';
+import { useEffect, useState } from 'react';
+import { Bell, Search } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from './ThemeToggle';
+import { createClient } from '@/utils/supabase/client'; // Client-side Supabase initialization
+import Link from 'next/link';
+import { User } from '@/types/types';
+import { MobileSidebar } from './MobileSidebar';
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null); // Update state type
-  const [avatarUrl, setAvatarUrl] = useState("/images/default.png");
+  const [avatarUrl, setAvatarUrl] = useState('/images/default.png');
   const supabase = createClient();
 
   useEffect(() => {
     async function getUserData() {
       // Fetch user from Supabase client-side
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         setUser(user as unknown as User); // Type assertion to match local User type
         // Fetch the user's profile to get the avatar URL
-        const { data } = await supabase
-          .from("profiles")
-          .select("avatar_url")
-          .eq("id", user.id)
-          .single();
+        const { data } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
 
         if (data?.avatar_url) {
-          const { data: { publicUrl } } = supabase.storage
-            .from("avatars")
-            .getPublicUrl(data.avatar_url);
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from('avatars').getPublicUrl(data.avatar_url);
 
-          setAvatarUrl(publicUrl || "/images/default.png");
+          setAvatarUrl(publicUrl || '/images/default.png');
         }
       }
     }
@@ -41,7 +40,10 @@ export default function Header() {
   }, [supabase]);
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-white dark:bg-[#171717] border-b border-gray-200 dark:border-gray-800">
+    <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-white dark:bg-[#171717] border-b border-gray-200 dark:border-[#2e2e2e]">
+      <div className="md:hidden ">
+        <MobileSidebar />
+      </div>
       <div className="flex items-center space-x-8"></div>
       <div className="flex items-center space-x-4">
         <Button variant="ghost" size="icon">

@@ -1,3 +1,4 @@
+// Path: src\forms\ProductUpload.tsx
 'use client';
 
 import { useState } from 'react';
@@ -22,7 +23,7 @@ export default function ProductUploadForm() {
   };
 
   return (
-    <form className="max-w-4xl mx-auto p-6 bg-card rounded-lg shadow-lg">
+    <form className="p-6 bg-card rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Upload Product</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">

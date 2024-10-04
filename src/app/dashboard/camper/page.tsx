@@ -1,17 +1,18 @@
+// Path: src\app\dashboard\camper\page.tsx
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 export default function ProductsPage() {
   return (
-    <div className="pt-10 pl-10 pr-8 pb-10 bg-[#f7f7f7] dark:bg-[#171717]">
-      <div>
+    <div className="pl-10 pt-10 pb-10">
+      <div className="bg-white dark:bg-[#252525] rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e] mr-8 p-6">
         <section>
           <h2 className="text-center text-2xl mt-6 font-medium md:text-5xl text-[#374C69]">Camper plek huren?</h2>
           <p className="msm:text-base mb-8 mt-4 text-center text-sm text-gray-500 md:mb-10 lg:mb-10">
             Van harte welkom op ERF-1. Op deze boerderij staan de droge koeien, pinken en de kalfjes.
           </p>
-          <div className="mx-auto grid justify-items-stretch gap-4 md:grid-cols-2 lg:gap-6">
+          <div className="mx-auto grid justify-items-stretch gap-6 md:grid-cols-2 lg:gap-6">
             {/* Item */}
             <Link href="/dashboard/camper/1" className="relative flex h-[300px] items-end">
               <Image

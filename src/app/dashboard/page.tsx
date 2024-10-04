@@ -1,6 +1,7 @@
+// Path: src\app\dashboard\page.tsx
 export default function page() {
   return (
-    <div className="pt-10 pl-10 pr-8 pb-10 bg-[#f7f7f7] dark:bg-[#171717]">
+    <div className="pt-10 pl-10 pr-8 pb-10 bg-[#ECF0F6] dark:bg-[#171717]">
       <div className="bg-white dark:bg-[#252525] p-4 rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e]">
         <h2 className="text-2xl">Pc Builder Page</h2>
         <p>

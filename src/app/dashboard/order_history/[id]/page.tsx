@@ -1,3 +1,4 @@
+// Path: src\app\dashboard\order_history\[id]\page.tsx
 import { createClient } from '@/utils/supabase/client';
 
 export default async function OrderDetails({ params }: { params: { id: string } }) {
@@ -49,7 +50,7 @@ export default async function OrderDetails({ params }: { params: { id: string } 
           </thead>
           <tbody className="block md:table-row-group">
             {orderItems.map((item) => (
-              <tr key={item.id} className="border dark:border-[#2e2e2e] md:table-row">
+              <tr key={item.id} className="border dark:border-[#2e2e2e] md:table-row bg-white">
                 {/* Render the product image */}
                 <td className="p-2 md:border md:dark:border-[#2e2e2e] block md:table-cell">
                   {item.image_url && (
