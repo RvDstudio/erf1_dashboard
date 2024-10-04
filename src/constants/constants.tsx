@@ -46,7 +46,7 @@ export const Menus: MenuItem[] = [
     icon: <Caravan className="w-5 h-5" />,
     gap: false,
     notification: 0,
-    path: '/loyalty-cards',
+    path: '/dashboard/camper',
   },
   {
     title: 'Agro Diëtetiek',
