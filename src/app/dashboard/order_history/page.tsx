@@ -4,14 +4,24 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client'; // Import Supabase client
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'; // Import necessary components
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import html2pdf from 'html2pdf.js';
+
+type Product = {
+  id: string;
+  product_name: string;
+  quantity: number;
+  price: number;
+  description: string;
+};
 
 type Order = {
   id: string;
   order_date: string;
   total_price: number;
   status: string;
+  products: Product[];
 };
 
 export default function OrderHistory() {
@@ -52,6 +62,34 @@ export default function OrderHistory() {
     fetchOrderHistory();
   }, [supabase.auth]);
 
+  const generatePDFWithHtml2pdf = (order: Order) => {
+    const element = document.getElementById(`order-pdf-${order.id}`);
+
+    if (element) {
+      // Ensure element is visible before generating PDF
+      element.style.display = 'block';
+
+      setTimeout(() => {
+        const opt = {
+          margin: 1,
+          filename: `order_${order.id}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        };
+
+        html2pdf()
+          .from(element)
+          .set(opt)
+          .save()
+          .then(() => {
+            // Hide the element again after PDF generation
+            element.style.display = 'none';
+          });
+      }, 500); // Allow some time for the content to fully render
+    }
+  };
+
   return (
     <div className="p-4 pt-6">
       <h1 className="text-xl font-medium mb-2">Order History</h1>
@@ -67,6 +105,7 @@ export default function OrderHistory() {
               <TableHead>Order Date</TableHead>
               <TableHead>Total Price</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -81,11 +120,57 @@ export default function OrderHistory() {
                   <TableCell>{new Date(order.order_date).toLocaleDateString()}</TableCell>
                   <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
                   <TableCell>{order.status}</TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => generatePDFWithHtml2pdf(order)}
+                      className="text-white bg-blue-500 hover:bg-blue-600"
+                    >
+                      Download PDF
+                    </Button>
+
+                    <div
+                      id={`order-pdf-${order.id}`}
+                      style={{
+                        display: 'none', // Start hidden until needed for PDF generation
+                      }}
+                    >
+                      <h1>Order ID: {order.id}</h1>
+                      <p>
+                        <strong>Order Date:</strong> {new Date(order.order_date).toLocaleDateString()}
+                      </p>
+                      <p>
+                        <strong>Total Price:</strong> €{order.total_price.toFixed(2)}
+                      </p>
+                      <p>
+                        <strong>Status:</strong> {order.status}
+                      </p>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {order.products.map((product) => (
+                            <tr key={product.id}>
+                              <td>{product.product_name}</td>
+                              <td>{product.quantity}</td>
+                              <td>€{product.price.toFixed(2)}</td>
+                              <td>{product.description || 'N/A'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="text-center">
+                <TableCell colSpan={5} className="text-center">
                   No orders found.
                 </TableCell>
               </TableRow>
