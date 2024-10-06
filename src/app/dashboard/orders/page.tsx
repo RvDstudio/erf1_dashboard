@@ -4,13 +4,14 @@ import { useOrder } from '@/context/OrderContext';
 import { useTotalPrice } from '@/context/TotalPriceContext'; // Use this to get total price
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import { Session } from '@supabase/supabase-js'; // Import the Session type from Supabase
 
 export default function Order() {
   const { orderData, setOrderData } = useOrder();
   const { getTotalPrice } = useTotalPrice(); // Get total price from the context
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<Session | null>(null); // Set the type as Session | null
   const supabase = createClient();
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function Order() {
             ...orderData, // Include selected products and other details
             totalPrice: totalPrice, // Pass the total price to the API
           },
-          userId: session.user.id,
+          userId: session?.user?.id,
         }),
       });
 
