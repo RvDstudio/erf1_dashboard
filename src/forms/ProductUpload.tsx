@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Image from 'next/image';
 
 export default function ProductUploadForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -48,7 +49,7 @@ export default function ProductUploadForm() {
           <div>
             <Label htmlFor="image">Image</Label>
             <Input id="image" type="file" accept="image/*" onChange={handleImageChange} />
-            {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 max-w-full h-40 object-contain" />}
+            {imagePreview && <Image src={imagePreview} alt="Preview" className="mt-2 max-w-full h-40 object-contain" />}
           </div>
           <div>
             <Label htmlFor="category">Category</Label>
