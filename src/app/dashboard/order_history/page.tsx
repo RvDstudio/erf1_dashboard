@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client'; // Import Supabase client
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import html2pdf from 'html2pdf.js';
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 type Product = {
   id: string;
@@ -62,32 +62,57 @@ export default function OrderHistory() {
     fetchOrderHistory();
   }, [supabase.auth]);
 
-  const generatePDFWithHtml2pdf = (order: Order) => {
-    const element = document.getElementById(`order-pdf-${order.id}`);
+  const styles = StyleSheet.create({
+    page: { padding: 40 },
+    section: { marginBottom: 20 },
+    heading: { fontSize: 18, marginBottom: 10, fontWeight: 'bold' },
+    orderInfo: { fontSize: 12, marginBottom: 6 },
+    bold: { fontWeight: 'bold' },
+    tableHeader: { fontSize: 12, marginBottom: 8, fontWeight: 'bold', textAlign: 'left' },
+    tableCell: { fontSize: 10, paddingVertical: 2 },
+    tableRow: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
+    tableColumn: { width: '33.3%' },
+  });
 
-    if (element) {
-      // Ensure element is visible before generating PDF
-      element.style.display = 'block';
+  const OrderPDFDocument = ({ order }: { order: Order }) => (
+    <Document>
+      <Page style={styles.page}>
+        <View style={styles.section}>
+          <Text style={styles.heading}>Order Details</Text>
+          <Text style={styles.orderInfo}>
+            <Text style={styles.bold}>Order ID:</Text> {order.id}
+          </Text>
+          <Text style={styles.orderInfo}>
+            <Text style={styles.bold}>Order Date:</Text> {new Date(order.order_date).toLocaleDateString()}
+          </Text>
+          <Text style={styles.orderInfo}>
+            <Text style={styles.bold}>Total Price:</Text> €{order.total_price.toFixed(2)}
+          </Text>
+          <Text style={styles.orderInfo}>
+            <Text style={styles.bold}>Status:</Text> {order.status}
+          </Text>
+        </View>
 
-      setTimeout(() => {
-        const opt = {
-          margin: 1,
-          filename: `order_${order.id}.pdf`,
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-        };
-
-        html2pdf()
-          .from(element)
-          .set(opt)
-          .save()
-          .then(() => {
-            // Hide the element again after PDF generation
-            element.style.display = 'none';
-          });
-      }, 500); // Allow some time for the content to fully render
-    }
-  };
+        <View style={styles.section}>
+          <Text style={styles.heading}>Products</Text>
+          <View>
+            <View style={styles.tableRow}>
+              <Text style={[styles.tableHeader, styles.tableColumn]}>Product Name</Text>
+              <Text style={[styles.tableHeader, styles.tableColumn]}>Quantity</Text>
+              <Text style={[styles.tableHeader, styles.tableColumn]}>Price</Text>
+            </View>
+            {order.products.map((product) => (
+              <View key={product.id} style={styles.tableRow}>
+                <Text style={[styles.tableCell, styles.tableColumn]}>{product.product_name}</Text>
+                <Text style={[styles.tableCell, styles.tableColumn]}>{product.quantity}</Text>
+                <Text style={[styles.tableCell, styles.tableColumn]}>€{product.price.toFixed(2)}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </Page>
+    </Document>
+  );
 
   return (
     <div className="p-4 pt-6">
@@ -120,48 +145,19 @@ export default function OrderHistory() {
                   <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>
-                    <Button
-                      onClick={() => generatePDFWithHtml2pdf(order)}
-                      className="text-white text-xs  bg-[#374C69] hover:bg-[#374C69]/90"
-                    >
-                      Download PDF
-                    </Button>
-
-                    <div
-                      id={`order-pdf-${order.id}`}
-                      style={{
-                        display: 'none', // Start hidden until needed for PDF generation
-                      }}
-                    >
-                      <h1>Order ID: {order.id}</h1>
-                      <p>
-                        <strong>Order Date:</strong> {new Date(order.order_date).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong>Total Price:</strong> €{order.total_price.toFixed(2)}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {order.status}
-                      </p>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {order.products.map((product) => (
-                            <tr key={product.id}>
-                              <td>{product.product_name}</td>
-                              <td>{product.quantity}</td>
-                              <td>€{product.price.toFixed(2)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <PDFDownloadLink document={<OrderPDFDocument order={order} />} fileName={`order_${order.id}.pdf`}>
+                      {({ loading }) =>
+                        loading ? (
+                          <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">
+                            Generating PDF...
+                          </Button>
+                        ) : (
+                          <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">
+                            Download PDF
+                          </Button>
+                        )
+                      }
+                    </PDFDownloadLink>
                   </TableCell>
                 </TableRow>
               ))

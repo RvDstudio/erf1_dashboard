@@ -55,7 +55,13 @@ export default async function OrderDetails({ params }: { params: { id: string } 
                 {/* Render the product image */}
                 <td className="p-2 md:border md:dark:border-[#2e2e2e] block md:table-cell">
                   {item.image_url && (
-                    <Image src={item.image_url} alt={item.product_name} className="w-20 h-20 object-cover rounded-lg" />
+                    <Image
+                      src={item.image_url}
+                      alt={item.product_name}
+                      className="w-20 h-20 object-cover rounded-lg"
+                      width={20}
+                      height={20}
+                    />
                   )}
                 </td>
                 {/* Product name */}
