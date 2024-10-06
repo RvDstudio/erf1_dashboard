@@ -2,18 +2,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import React, { useState } from 'react';
-import InfiniteCalendar from 'react-infinite-calendar';
+import React from 'react';
+
 import 'react-infinite-calendar/styles.css';
 
 export default function Page() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleDateChange = (date: Date) => {
-    setSelectedDate(date);
-    // You can add logic here to handle bookings for the selected date
-  };
-
   return (
     <div className="pt-10 pl-10 pr-8 pb-10 bg-[#f7f7f7] dark:bg-[#171717]">
       <div className="bg-white dark:bg-[#252525] p-4 rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e]">
@@ -35,23 +28,6 @@ export default function Page() {
           eligendi error deserunt iste unde magnam animi asperiores quas! Et omnis optio quas id praesentium ad fugiat,
           earum unde quae suscipit officia ab a dicta facere, in impedit.
         </p>
-
-        {/* Infinite Calendar */}
-        <div className="mt-8 mb-6 w-full">
-          <InfiniteCalendar
-            onSelect={handleDateChange}
-            width={600}
-            height={300}
-            rowHeight={40}
-            selected={selectedDate}
-            displayOptions={{
-              layout: 'classic',
-              showHeader: false,
-            }}
-          />
-          <p className="mt-4">Selected Date: {selectedDate.toLocaleDateString()}</p>
-        </div>
-
         <Button className="mt-4 bg-[#374C69] hover:bg-[#374C69]/90 text-[#6699CC]">Verblijf boeken</Button>
       </div>
     </div>

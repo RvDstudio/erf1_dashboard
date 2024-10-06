@@ -28,9 +28,8 @@ export async function POST(req: NextRequest) {
     if (orderError) throw orderError;
 
     const orderId = order[0]?.id;
-
     // Insert each product from the order into the `order_items` table
-    const insertPromises = orderData.selectedProducts.map(async (product: any) => {
+    const insertPromises = orderData.selectedProducts.map(async (product: { name: string, description: string, shortDescription: string, id: string, regular_price: number, images: { src: string }[] }) => {
       const { data, error } = await supabase
         .from('order_items')
         .insert({
