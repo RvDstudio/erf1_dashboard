@@ -73,7 +73,6 @@ export default function OrderHistory() {
         const opt = {
           margin: 1,
           filename: `order_${order.id}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
         };
@@ -123,7 +122,7 @@ export default function OrderHistory() {
                   <TableCell>
                     <Button
                       onClick={() => generatePDFWithHtml2pdf(order)}
-                      className="text-white bg-blue-500 hover:bg-blue-600"
+                      className="text-white text-xs  bg-[#374C69] hover:bg-[#374C69]/90"
                     >
                       Download PDF
                     </Button>
@@ -150,7 +149,6 @@ export default function OrderHistory() {
                             <th>Product Name</th>
                             <th>Quantity</th>
                             <th>Price</th>
-                            <th>Description</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -159,7 +157,6 @@ export default function OrderHistory() {
                               <td>{product.product_name}</td>
                               <td>{product.quantity}</td>
                               <td>€{product.price.toFixed(2)}</td>
-                              <td>{product.description || 'N/A'}</td>
                             </tr>
                           ))}
                         </tbody>

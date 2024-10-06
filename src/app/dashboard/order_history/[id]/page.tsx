@@ -50,7 +50,7 @@ export default async function OrderDetails({ params }: { params: { id: string } 
           </thead>
           <tbody className="block md:table-row-group">
             {orderItems.map((item) => (
-              <tr key={item.id} className="border dark:border-[#2e2e2e] md:table-row bg-white">
+              <tr key={item.id} className="border dark:border-[#4b4b4b] md:table-row bg-white dark:bg-[#252525]">
                 {/* Render the product image */}
                 <td className="p-2 md:border md:dark:border-[#2e2e2e] block md:table-cell">
                   {item.image_url && (
