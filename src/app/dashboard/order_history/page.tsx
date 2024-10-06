@@ -146,17 +146,7 @@ export default function OrderHistory() {
                   <TableCell>{order.status}</TableCell>
                   <TableCell>
                     <PDFDownloadLink document={<OrderPDFDocument order={order} />} fileName={`order_${order.id}.pdf`}>
-                      {({ loading }) =>
-                        loading ? (
-                          <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">
-                            Generating PDF...
-                          </Button>
-                        ) : (
-                          <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">
-                            Download PDF
-                          </Button>
-                        )
-                      }
+                      <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">Download PDF</Button>
                     </PDFDownloadLink>
                   </TableCell>
                 </TableRow>
