@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { User } from '@/types/types';
 import { MobileSidebar } from './MobileSidebar';
 import { FC } from 'react'; // Ensure you import FC
+import Image from 'next/image';
 
 const AvatarFallback: FC<{ children: React.ReactNode }> = ({ children }) => {
   return <div>{children}</div>; // Example implementation
