@@ -42,9 +42,8 @@ export default function VleesList({ vlees, initialQuantities = {} }: VleesListPr
       [vleesId]: (prev[vleesId] || 0) + 1,
     }));
   };
-
   const handleOrder = async () => {
-    const { data: session, error } = await supabase.auth.getSession();
+    const { data: session } = await supabase.auth.getSession();
 
     if (!session) {
       alert('You must be logged in to place an order.');

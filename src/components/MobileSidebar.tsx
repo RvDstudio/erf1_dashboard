@@ -11,12 +11,18 @@ export function MobileSidebar() {
   const isActive = (path: string) => path === pathname;
   const [open, setOpen] = useState<boolean>(false);
 
+  // Example usage of setOpen to toggle the sidebar
+  const toggleSidebar = () => setOpen(!open);
+
   return (
     <Sheet key="left">
-      <SheetTrigger asChild>
+      <SheetTrigger asChild onClick={toggleSidebar}>
         <Menu className="h-6 w-6 pr-1 text-[#888888]" />
       </SheetTrigger>
-      <SheetContent side={'left'} className="w-[350px] bg-white dark:bg-[#171717] border-r border-[#374c69]">
+      <SheetContent
+        side={'left'}
+        className={`w-[350px] bg-white dark:bg-[#171717] border-r border-[#374c69] ${open ? 'open' : 'closed'}`}
+      >
         <div className="flex gap-x-2 items-center border-b border-dashed border-[#6d9ecf] pb-[11px]">
           <Component strokeWidth={1.5} className={`text-gray-700 pl-1 cursor-pointer duration-500 h-8 w-8`} />
           <h1
