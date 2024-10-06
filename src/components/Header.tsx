@@ -2,13 +2,18 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Bell, Search } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 import { createClient } from '@/utils/supabase/client'; // Client-side Supabase initialization
 import Link from 'next/link';
 import { User } from '@/types/types';
 import { MobileSidebar } from './MobileSidebar';
+import { FC } from 'react'; // Ensure you import FC
+
+const AvatarFallback: FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <div>{children}</div>; // Example implementation
+};
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null); // Update state type
@@ -61,7 +66,7 @@ export default function Header() {
               <Avatar className="h-8 w-8">
                 <AvatarImage src={avatarUrl} alt={`${user?.email}'s Avatar`} />
                 <AvatarFallback>
-                  <img src="/images/default.png" alt="Fallback Avatar" />
+                  <Image src="/images/default.png" alt="Default Avatar" width={32} height={32} />
                 </AvatarFallback>
               </Avatar>
             </Link>

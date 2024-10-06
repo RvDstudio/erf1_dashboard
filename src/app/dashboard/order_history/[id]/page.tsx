@@ -1,5 +1,6 @@
 // Path: src\app\dashboard\order_history\[id]\page.tsx
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
 
 export default async function OrderDetails({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -54,7 +55,7 @@ export default async function OrderDetails({ params }: { params: { id: string } 
                 {/* Render the product image */}
                 <td className="p-2 md:border md:dark:border-[#2e2e2e] block md:table-cell">
                   {item.image_url && (
-                    <img src={item.image_url} alt={item.product_name} className="w-20 h-20 object-cover rounded-lg" />
+                    <Image src={item.image_url} alt={item.product_name} className="w-20 h-20 object-cover rounded-lg" />
                   )}
                 </td>
                 {/* Product name */}

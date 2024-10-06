@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function Home() {
   return (
     <>
@@ -14,7 +16,9 @@ export default function Home() {
         <div className="small-blur background-base"></div>
         <section className="mx-auto max-w-7xl px-[32px] relative flex items-center justify-between pt-36 mb-36">
           <div className="text-center w-full ">
-          <h1 className="gradient-text text-[120px] font-medium text-transparent animate-gradient">Rhyno Saas Starter</h1>
+            <h1 className="gradient-text text-[120px] font-medium text-transparent animate-gradient">
+              Rhyno Saas Starter
+            </h1>
             <h2 className="text-[36px] leading-[38px] md:text-[50px] md:leading-[50px] tracking-[-1.6px] font-normal pt-8 text-[#888888]">
               Supercharge your Nextjs Saas.
             </h2>
@@ -30,7 +34,7 @@ export default function Home() {
               <div className="flex gap-5 flex-col rounded-lg rounded-b-none pricing-card-border">
                 <div className="flex justify-between items-center px-8 pt-8">
                   <div className="flex items-center gap-[10px]">
-                    <img
+                    <Image
                       alt="Starter"
                       loading="lazy"
                       width={40}
@@ -127,7 +131,7 @@ export default function Home() {
                 <div className="featured-soft-blur-bg" />
                 <div className="flex justify-between items-center px-8 pt-8 featured-price-title">
                   <div className="flex items-center gap-[10px]">
-                    <img
+                    <Image
                       alt="Pro"
                       loading="lazy"
                       width={40}
@@ -241,7 +245,7 @@ export default function Home() {
               <div className="flex gap-5 flex-col rounded-lg rounded-b-none pricing-card-border">
                 <div className="flex justify-between items-center px-8 pt-8">
                   <div className="flex items-center gap-[10px]">
-                    <img
+                    <Image
                       alt="Advanced"
                       loading="lazy"
                       width={40}
