@@ -31,28 +31,28 @@ export default async function Login({ searchParams }: { searchParams: { message:
           flex items-center justify-center"
       >
         <div className="w-full h-100 px-6">
-          <h2 className="text-xl text-[#374C69] md:text-2xl font-bold text-center mb-6">Login to your account</h2>
+          <h2 className="text-xl text-[#374C69] md:text-2xl font-bold text-center mb-6">Log in op uw account</h2>
           <form id="login-form" className="grid gap-4">
-            <div className="grid gap-2">
+            <div className="grid gap-2 text-[#374C69]">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" placeholder="m@example.com" required />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
+              <div className="flex items-center text-[#374C69]">
                 <Label htmlFor="password">Password</Label>
               </div>
               <Input minLength={6} name="password" id="password" type="password" required />
             </div>
             {searchParams.message && <div className="text-sm font-medium text-destructive">{searchParams.message}</div>}
-            <Button formAction={emailLogin} className="w-full">
+            <Button formAction={emailLogin} className="w-full bg-[#374C69] hover:bg-[#374C69]/90">
               Login
             </Button>
           </form>
           <OAuthButtons />
-          <div className="text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <button formAction={signup} form="login-form" className="underline">
-              Sign up
+          <div className="text-center text-[#374C69] text-sm">
+            Heeft u nog geen account?{' '}
+            <button formAction={signup} form="login-form" className="underline text-[#374C69]">
+              Account aanmaken
             </button>
           </div>
         </div>
