@@ -1,11 +1,20 @@
 // components/KaasProducts.tsx
 import KaasList from './KaasList';
+import { Zuivel } from '@/types/types'; // Import the Zuivel type from types
 
 interface Product {
   id: number;
   name: string;
-  price: number;
+  price: string | number;
   category: string;
+  images?: { src: string }[]; // Optional images field
+  regular_price: number;
+  description: string;
+  short_description: string;
+  image_url: string;
+  quantity: number;
+  stock_status: string;
+  src: string;
 }
 
 async function getData(): Promise<Product[]> {
@@ -26,9 +35,28 @@ async function getData(): Promise<Product[]> {
   }
 }
 
+function mapProductToZuivel(products: Product[]): Zuivel[] {
+  const fallbackImageUrl = 'https://via.placeholder.com/500'; // Valid fallback image URL
+
+  return products.map((product) => ({
+    id: product.id.toString(),
+    name: product.name,
+    regular_price: typeof product.price === 'number' ? product.price.toFixed(2) : Number(product.price).toFixed(2),
+    description: 'Default description', // Default or actual description
+    short_description: 'Default short description', // Default or actual short description
+    stock_status: 'instock', // Modify based on actual stock status if available
+    images: product.images && product.images.length > 0 ? product.images : [{ src: fallbackImageUrl }],
+    price: product.price.toString(),
+    category: product.category,
+    quantity: 0, // Set quantity to a default value (e.g., 0)
+    src: product.images && product.images.length > 0 ? product.images[0].src : fallbackImageUrl, // Main image URL or fallback
+  }));
+}
+
 export default async function KaasProducts() {
   try {
-    const kaas = await getData();
+    const products = await getData();
+    const kaas = mapProductToZuivel(products); // Convert Product[] to Zuivel[]
 
     return (
       <div className="!z-5 relative flex h-full w-full flex-col rounded-[20px] bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
