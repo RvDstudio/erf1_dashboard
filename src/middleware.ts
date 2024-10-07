@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-  const supabase = createClient({ req, res });
+  const supabase = createClient();  // No arguments needed here
 
   // Check if the user is authenticated
   const {
