@@ -47,6 +47,9 @@ export default function ZuivelList({ zuivel, initialQuantities = {} }: ZuivelLis
     const { data: session, error } = await supabase.auth.getSession();
 
     if (!session) {
+      if (error) {
+        console.error(error); // Log the error if it exists
+      }
       // Handle case where user is not authenticated
       alert('You must be logged in to place an order.');
       return;
