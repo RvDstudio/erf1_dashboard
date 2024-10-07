@@ -21,9 +21,17 @@ export default async function Login({ searchParams }: { searchParams: { message:
   }
 
   return (
-    <div className="w-full lg:grid h-screen lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
+    <section className="flex flex-col md:flex-row h-screen items-center">
+      <div className="bg-blue-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
+        <Image src="/images/cow.png" alt="" className="w-full h-full object-cover" width={500} height={500} />
+      </div>
+
+      <div
+        className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
+          flex items-center justify-center"
+      >
+        <div className="w-full h-100 px-6">
+          <h2 className="text-xl md:text-2xl font-bold text-center mb-6">Login to your account</h2>
           <form id="login-form" className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
@@ -49,9 +57,6 @@ export default async function Login({ searchParams }: { searchParams: { message:
           </div>
         </div>
       </div>
-      <div className="hidden lg:block">
-        <Image src="/images/cow.png" alt="Image" width="500" height="500" className="h-full w-full object-cover" />
-      </div>
-    </div>
+    </section>
   );
 }
