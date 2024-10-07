@@ -1,3 +1,4 @@
+// Path: src\app\login\oauth-signin.tsx
 'use client';
 import { Button } from '@/components/ui/button';
 import { Provider } from '@supabase/supabase-js';
@@ -24,7 +25,7 @@ export function OAuthButtons() {
       {oAuthProviders.map((provider) => (
         <Button
           key={provider.name} // Always add a key when rendering list items
-          className="w-full flex items-center justify-center gap-2 mt-6 mb-4"
+          className="w-full flex items-center justify-center gap-2 mt-6 mb-4  max-w-[400px] mx-auto"
           variant="outline"
           onClick={async () => {
             await oAuthSignIn(provider.name);
