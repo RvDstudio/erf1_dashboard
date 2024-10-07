@@ -31,7 +31,7 @@ export default async function Login({ searchParams }: { searchParams: { message:
           flex items-center justify-center"
       >
         <div className="w-full h-100 px-6">
-          <h2 className="text-xl md:text-2xl font-bold text-center mb-6">Login to your account</h2>
+          <h2 className="text-xl text-[#374C69] md:text-2xl font-bold text-center mb-6">Login to your account</h2>
           <form id="login-form" className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
