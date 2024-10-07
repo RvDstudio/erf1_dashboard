@@ -1,3 +1,4 @@
+// components/ZuivelList.tsx
 'use client';
 
 import Image from 'next/image';
@@ -47,9 +48,6 @@ export default function ZuivelList({ zuivel, initialQuantities = {} }: ZuivelLis
     const { data: session, error } = await supabase.auth.getSession();
 
     if (!session) {
-      if (error) {
-        console.error(error); // Log the error if it exists
-      }
       // Handle case where user is not authenticated
       alert('You must be logged in to place an order.');
       return;
@@ -124,7 +122,7 @@ export default function ZuivelList({ zuivel, initialQuantities = {} }: ZuivelLis
       </div>
       <button
         onClick={handleOrder}
-        className="flex items-center mt-4 pl-2 pr-4  py-1 text-sm bg-[#374c69] mb-6 text-white rounded-md"
+        className="flex items-center mt-4 pl-2 pr-4 py-1 text-sm bg-[#374c69] mb-6 text-white rounded-md"
       >
         <PlusIcon className="w-4 h-4 inline mr-1" />
         Bestellen
