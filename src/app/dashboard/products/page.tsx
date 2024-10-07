@@ -24,7 +24,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <ZuivelProducts {...{ onPriceChange: () => {} }} />
+                  <ZuivelProducts />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
@@ -40,7 +40,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <KaasProducts {...{ onPriceChange: () => {} }} />
+                  <KaasProducts />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
@@ -56,7 +56,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <VleesProducts {...{ onPriceChange: () => {} }} />
+                  <VleesProducts />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
