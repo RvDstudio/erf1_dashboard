@@ -1,8 +1,22 @@
-// components/VleesProducts.tsx
 import VleesList from './VleesList';
-import { Zuivel } from '@/types/types'; // Import the Zuivel type from types
+import { Vlees } from '@/types/types'; // Import the Zuivel type from types
 
-async function getDataVlees(): Promise<Product[]> {
+interface Product {
+  id: number;
+  name: string;
+  price: string | number;
+  category: string;
+  images?: { src: string }[]; // Optional images field
+  regular_price: number;
+  description: string;
+  short_description: string;
+  image_url: string;
+  quantity: number;
+  stock_status: string;
+  src: string;
+}
+
+async function getData(): Promise<Product[]> {
   try {
     const res = await fetch(
       'https://erf1.nl/wp-json/wc/v3/products?per_page=50&category=28&consumer_key=ck_1e0d6a42370bf5fe7931b936a18bd61b757dcf71&consumer_secret=cs_754a9131b06a77a29116c966d0d99b83783b4efc'
@@ -20,17 +34,30 @@ async function getDataVlees(): Promise<Product[]> {
   }
 }
 
-export default async function VleesProducts() {
+function mapProductToZuivel(products: Product[]): Vlees[] {
+  const fallbackImageUrl = 'https://via.placeholder.com/500'; // Valid fallback image URL
+
+  return products.map((product) => ({
+    id: product.id.toString(),
+    name: product.name,
+    // Ensure price is a number before applying toFixed()
+    regular_price: typeof product.price === 'number' ? product.price.toFixed(2) : Number(product.price).toFixed(2),
+    description: 'Default description', // Default or actual description
+    short_description: 'Default short description', // Default or actual short description
+    stock_status: 'instock', // Modify based on actual stock status if available
+    images: product.images && product.images.length > 0 ? product.images : [{ src: fallbackImageUrl }],
+    // Add the missing fields
+    price: product.price.toString(),
+    category: product.category,
+    quantity: 0, // Set quantity to a default value (e.g., 0)
+    src: product.images && product.images.length > 0 ? product.images[0].src : fallbackImageUrl, // Main image URL or fallback
+  }));
+}
+
+export default async function ZuivelProducts() {
   try {
-    const products = await getDataVlees();
-    // Assuming mapProductToZuivel is a function that needs to be defined or imported
-    // For demonstration, let's assume it's a simple function that maps Product to Zuivel
-    const vlees = products.map((product) => ({
-      ...product,
-      // Assuming Zuivel has additional properties that need to be set or modified
-      // For demonstration, let's assume Zuivel has a property 'zuivelType' that needs to be set
-      zuivelType: 'Vlees',
-    }));
+    const products = await getData();
+    const vlees = mapProductToZuivel(products); // Convert Product[] to Zuivel[]
 
     return (
       <div className="!z-5 relative flex h-full w-full flex-col rounded-[20px] bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
