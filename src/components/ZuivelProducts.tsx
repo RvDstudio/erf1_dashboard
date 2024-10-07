@@ -1,14 +1,7 @@
-// components/ZuivelProducts.tsx
 import ZuivelList from './ZuivelList';
+import { Zuivel } from '@/types/types';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-}
-
-async function getData(): Promise<Product[]> {
+async function getData(): Promise<Zuivel[]> {
   try {
     const res = await fetch(
       'https://erf1.nl/wp-json/wc/v3/products?per_page=50&category=29&consumer_key=ck_1e0d6a42370bf5fe7931b936a18bd61b757dcf71&consumer_secret=cs_754a9131b06a77a29116c966d0d99b83783b4efc'
@@ -19,7 +12,18 @@ async function getData(): Promise<Product[]> {
       throw new Error('Failed to fetch data');
     }
 
-    return await res.json();
+    const products = await res.json();
+
+    // Transform the fetched products to match the Zuivel type
+    return products.map((product: Zuivel) => ({
+      id: product.id,
+      name: product.name,
+      regular_price: product.regular_price,
+      description: product.description || 'No description available',
+      short_description: product.short_description || 'No short description available',
+      image_url: product.images[0]?.src || '',
+      stock_status: product.stock_status,
+    }));
   } catch (error) {
     console.error('Error fetching data:', error);
     throw error;
