@@ -7,6 +7,13 @@ interface Product {
   price: string | number;
   category: string;
   images?: { src: string }[]; // Optional images field
+  regular_price: number;
+  description: string;
+  short_description: string;
+  image_url: string;
+  quantity: number;
+  stock_status: string;
+  src: string;
 }
 
 async function getData(): Promise<Product[]> {

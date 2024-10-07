@@ -43,9 +43,8 @@ export default function ZuivelList({ zuivel, initialQuantities = {} }: ZuivelLis
       [zuivelId]: (prev[zuivelId] || 0) + 1,
     }));
   };
-
   const handleOrder = async () => {
-    const { data: session, error } = await supabase.auth.getSession();
+    const { data: session } = await supabase.auth.getSession();
 
     if (!session) {
       // Handle case where user is not authenticated
