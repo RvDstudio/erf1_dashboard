@@ -22,7 +22,7 @@ export default async function Login({ searchParams }: { searchParams: { message:
 
   return (
     <section className="flex flex-col md:flex-row h-screen items-center">
-      <div className="bg-blue-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
+      <div className="bg-gray-100 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
         <Image src="/images/cow.png" alt="" className="w-full h-full object-cover" width={500} height={500} />
       </div>
 
@@ -35,16 +35,31 @@ export default async function Login({ searchParams }: { searchParams: { message:
           <form id="login-form" className="grid gap-4">
             <div className="grid gap-2 text-[#374C69]">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" placeholder="m@example.com" required />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                className="bg-gray-100 focus:bg-white border-[#dddddd]"
+              />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center text-[#374C69]">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input minLength={6} name="password" id="password" type="password" required />
+              <Input
+                minLength={6}
+                name="password"
+                id="password"
+                type="password"
+                placeholder="password"
+                required
+                className="bg-gray-100 focus:bg-white border-[#dddddd] "
+              />
             </div>
             {searchParams.message && <div className="text-sm font-medium text-destructive">{searchParams.message}</div>}
-            <Button formAction={emailLogin} className="w-full bg-[#374C69] hover:bg-[#374C69]/90">
+            <Button formAction={emailLogin} className="w-full bg-[#374C69] text-white hover:bg-[#374C69]/90">
               Login
             </Button>
           </form>
