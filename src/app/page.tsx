@@ -29,7 +29,7 @@ export default function Example() {
   };
 
   return (
-    <section className="pt-0 lg:pt-24 bg-[url('https://pagedone.io/asset/uploads/1691055810.png')] bg-center bg-cover">
+    <section className="pt-0 lg:pt-24 bg-[url('/images/1691055810.png')] bg-center bg-cover">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
         <Image
           src="/images/thumb2.png"
@@ -43,8 +43,7 @@ export default function Example() {
           <span className=""> Bestellingen </span>
         </h1>
         <p className="max-w-[600px] mx-auto text-center text-base font-normal leading-7 text-gray-500 mb-9">
-          Het erf waarop onze boerderij staat is al in gebruik sinds 1432 toen in de monding van de IJsseldelta eilanden
-          aaneen groeiden op de grens van zoet en zout.
+          Het erf waarop onze boerderij staat is al in gebruik sinds 1432.
         </p>
         <a
           onClick={handleClick}
