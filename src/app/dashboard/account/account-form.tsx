@@ -9,15 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { MoveHorizontalIcon, SearchIcon } from 'lucide-react';
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -135,143 +126,117 @@ export default function AccountForm({ user }: { user: User | null }) {
   }
 
   return (
-    <div className="pl-10 pt-10 pb-10">
-      <div className="bg-white dark:bg-[#252525] rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e] mr-8">
+    <div className="pl-10 pt-10 pb-10 flex flex-col lg:flex-row">
+      <div className="bg-white dark:bg-[#252525] rounded-lg shadow-sm mr-8 mb-6">
         <div className="mt-0 flex flex-col md:flex-row p-8">
-          <div className="border-none md:border-r border-gray-200">
-            <div className="border-b md:border-b-0 md:border-r md:pr-8 border-gray-200 dark:border-[#414141] pb-6">
-              <h2 className="text-xl mb-3 text-[#888888]">User Profile</h2>
-              <div className="flex flex-col items-center w-full">
-                {avatarUrl && (
-                  <Image
-                    src={
-                      supabase.storage.from('avatars').getPublicUrl(avatarUrl).data?.publicUrl || '/images/default.png'
-                    }
-                    alt="Avatar"
-                    width={100}
-                    height={100}
-                    className="rounded"
-                  />
-                )}
-                <div>
-                  <Label htmlFor="image-upload" className="text-[18px] block mb-4 text-center">
-                    Avatar
-                  </Label>
-                  <Input
-                    id="avatar"
-                    type="file"
-                    accept="image/*"
-                    className="mb-2"
-                    onChange={uploadAvatar}
-                    disabled={uploading}
-                    aria-describedby="file-upload-description"
-                  />
-                  <p id="file-upload-description" className="text-sm text-center text-gray-500 mt-1">
-                    JPG, PNG, GIF (max 5MB)
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6 text-[#888888] flex flex-col space-y-4">
-                <div className="flex justify-center items-center ">
-                  <Label htmlFor="fullname" className="w-48">
-                    Full Name
-                  </Label>
-                  <input
-                    className="px-4 bg-gray-100 rounded dark:bg-[#414141] ml-4"
-                    id="fullName"
-                    type="text"
-                    value={fullname || ''}
-                    onChange={(e) => setFullname(e.target.value)}
-                  />
-                </div>
-                <div className="flex justify-between items-center ">
-                  <Label htmlFor="username" className="w-48">
-                    Username
-                  </Label>
-                  <input
-                    className="px-4 bg-gray-100 rounded items-center dark:bg-[#414141] ml-4"
-                    id="username"
-                    type="text"
-                    value={username || ''}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </div>
-                <div className="flex justify-between items-center ">
-                  <Label htmlFor="website" className="w-48">
-                    Website
-                  </Label>
-                  <input
-                    className="px-4 bg-gray-100 rounded items-center dark:bg-[#414141] ml-4"
-                    id="website"
-                    type="url"
-                    value={website || ''}
-                    onChange={(e) => setWebsite(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-10">
-                <Button
-                  className="text-white dark:bg-[#323232] dark:text-white"
-                  onClick={() => updateProfile({ fullname, username, website, avatar_url: avatarUrl })}
-                  disabled={loading}
-                >
-                  {loading ? 'Updating...' : 'Update Profile'}
-                </Button>
-                <Button variant="outline" onClick={handleSignOut}>
-                  Sign out
-                </Button>
+          <div className="">
+            <h2 className="text-xl mb-3 text-[#374c69]">Gebruikersprofiel</h2>
+            <div className="flex flex-col items-center w-full">
+              {avatarUrl && (
+                <Image
+                  src={
+                    supabase.storage.from('avatars').getPublicUrl(avatarUrl).data?.publicUrl || '/images/default.png'
+                  }
+                  alt="Avatar"
+                  width={100}
+                  height={100}
+                  className="rounded"
+                />
+              )}
+              <div>
+                <Label htmlFor="image-upload" className="text-[18px] block mb-4 text-center">
+                  Avatar
+                </Label>
+                <Input
+                  id="avatar"
+                  type="file"
+                  accept="image/*"
+                  className="mb-2"
+                  onChange={uploadAvatar}
+                  disabled={uploading}
+                  aria-describedby="file-upload-description"
+                />
+                <p id="file-upload-description" className="text-sm text-center text-gray-500 mt-1">
+                  JPG, PNG, GIF (max 5MB)
+                </p>
               </div>
             </div>
-          </div>
-          <div className="md:pl-6 w-full">
-            <div className="flex items-center justify-between mb-6 mt-2">
-              <h1 className="text-xl text-[#888888]">Recente bestellingen</h1>
-              <div className="relative">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-[#252525]" />
-                <Input
-                  type="search"
-                  placeholder="Search team members..."
-                  className="pl-10 pr-4 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-[#414141] dark:text-gray-200"
+            <div className="mt-6 text-[#888888] flex flex-col space-y-4">
+              <div className="flex justify-center items-center ">
+                <Label htmlFor="fullname" className="w-48">
+                  Full Name
+                </Label>
+                <input
+                  className="px-4 bg-gray-100 rounded dark:bg-[#414141] ml-4"
+                  id="fullName"
+                  type="text"
+                  value={fullname || ''}
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+              </div>
+              <div className="flex justify-between items-center ">
+                <Label htmlFor="username" className="w-48">
+                  Username
+                </Label>
+                <input
+                  className="px-4 bg-gray-100 rounded items-center dark:bg-[#414141] ml-4"
+                  id="username"
+                  type="text"
+                  value={username || ''}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="flex justify-between items-center ">
+                <Label htmlFor="website" className="w-48">
+                  Website
+                </Label>
+                <input
+                  className="px-4 bg-gray-100 rounded items-center dark:bg-[#414141] ml-4"
+                  id="website"
+                  type="url"
+                  value={website || ''}
+                  onChange={(e) => setWebsite(e.target.value)}
                 />
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="bg-white rounded-lg shadow-sm p-4 dark:bg-[#414141] relative">
-                <div className="flex items-center space-x-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src="/placeholder-user.jpg" alt="User Avatar" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="text-lg font-medium">Biologische sinaasappel vla</h3>
-                      <Badge
-                        variant="outline"
-                        className="bg-gray-100 text-gray-700 dark:bg-[#252525] dark:text-gray-300"
-                      >
-                        Onze Zuivel
-                      </Badge>
-                    </div>
-                    <p className="text-gray-500 dark:text-[#252525] text-sm">Erf1 zuivel & meer</p>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="rounded-full">
-                        <MoveHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">Team member actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Bestelling bekijken</DropdownMenuItem>
-                      <DropdownMenuItem>Opnieuw bestellen</DropdownMenuItem>
-                      <DropdownMenuItem>verwijderen</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-              {/* Repeated orders block remain unchanged */}
+
+            <div className="flex items-center justify-between mt-10">
+              <Button
+                className="text-white dark:bg-[#323232] bg-[#374c69] hover:bg-[#374c69]/90 dark:text-white"
+                onClick={() => updateProfile({ fullname, username, website, avatar_url: avatarUrl })}
+                disabled={loading}
+              >
+                {loading ? 'Updating...' : 'Profiel bijwerken'}
+              </Button>
+              <Button variant="outline" onClick={handleSignOut}>
+                Uitloggen
+              </Button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white flex-1 dark:bg-[#252525] rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e] mr-8">
+        <div className="mt-0 flex flex-col md:flex-row p-8">
+          <div className="">
+            <h2 className="text-xl mb-3 text-[#374c69]">Meer informatie komt hier</h2>
+            <p className="text-[#888888]">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis pariatur commodi, itaque officia nostrum
+              dolore sint obcaecati vitae ad voluptatibus voluptatem, officiis fuga deleniti nobis eos sequi nihil.
+              Totam corporis magni modi impedit, ipsa quam maxime. Ad alias nulla perspiciatis expedita deserunt rem
+              delectus, ut id voluptate? Error, ex, expedita tempore minima accusantium debitis nulla sunt quibusdam
+              quas alias dicta quae accusamus facere? Amet libero minus velit repellendus corrupti accusamus fuga
+              nostrum et, a perferendis, consequuntur esse aut exercitationem. Perferendis doloremque qui debitis
+              ducimus, beatae delectus fugit consequatur temporibus, veniam corporis ut, modi odio vero dignissimos!
+              Vitae quas explicabo laborum reprehenderit est eaque illum sit cum repellendus alias error iusto ad
+              tempore quisquam labore non harum exercitationem, quam cumque porro repellat facere numquam omnis.
+              Consectetur ullam dignissimos illo unde reprehenderit alias neque minus voluptatum quibusdam, hic maxime
+              dicta vel eius nostrum similique vero? Nostrum temporibus repudiandae, harum, nisi repellendus, modi culpa
+              voluptatem consectetur possimus qui delectus ratione laudantium voluptatum? Id reiciendis voluptatum
+              commodi ipsam totam. Quaerat a eum odit dicta at commodi deleniti expedita necessitatibus, inventore
+              laboriosam hic explicabo dignissimos praesentium error consequuntur nam et soluta esse, quasi ipsa ratione
+              dolores autem tempora. Tempora expedita itaque neque impedit quia eum.
+            </p>
           </div>
         </div>
       </div>
