@@ -2,21 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
-
+.amatic {
+  font-family: 'Amatic SC', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 .gradient-text {
-  background: linear-gradient(
-    to right,
-    #a855f7,
-    #ec4899,
-    #eab308,
-    #ec4899,
-    #a855f7,
-    #ec4899,
-    #eab308
-  );
+  background: linear-gradient(to right, #a855f7, #ec4899, #eab308, #ec4899, #a855f7, #ec4899, #eab308);
   background-size: 300% 300%;
   background-clip: text;
 }
@@ -24,100 +21,103 @@ body {
   min-height: 1400px;
   width: 100%;
   position: absolute;
-  z-index: -1
+  z-index: -1;
 }
 
 .grid-bg {
-  background: url(/images/background/grid-bg.svg) no-repeat ;
-  
+  background: url(/images/background/grid-bg.svg) no-repeat;
 }
 
 .grain-background {
   background: url(/images/background/grain-bg.svg) repeat 50%;
-
 }
 
 .grain-blur {
   top: -220px;
   background: url(/images/background/grain-blur.svg) no-repeat 50%;
-
 }
 
 .large-blur {
   left: -30px;
   top: -864px;
   border-radius: 750px;
-  opacity: .2;
-  background: radial-gradient(70.71% 70.71% at 50% 50%,rgba(117,173,255,.2) 0,rgba(117,173,255,0) 70%,rgba(117,173,255,0) 100%)
+  opacity: 0.2;
+  background: radial-gradient(
+    70.71% 70.71% at 50% 50%,
+    rgba(117, 173, 255, 0.2) 0,
+    rgba(117, 173, 255, 0) 70%,
+    rgba(117, 173, 255, 0) 100%
+  );
 }
 
 .small-blur {
-  background: url(/images/background/small-blur.svg) no-repeat 50%
+  background: url(/images/background/small-blur.svg) no-repeat 50%;
 }
 
 .pricing-card-border {
-  position: relative
+  position: relative;
 }
 
 .pricing-card-border:before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 16px 16px 0 0;
   padding: 1px 1px 0;
-  background: linear-gradient(180deg,#414b4e 49.5%,rgba(65,75,78,0));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  background: linear-gradient(180deg, #414b4e 49.5%, rgba(65, 75, 78, 0));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-  mask-composite: exclude
+  mask-composite: exclude;
 }
 .featured-price-title {
-  position: relative
+  position: relative;
 }
 
 .featured-price-title:before {
-  content: "";
+  content: '';
   position: absolute;
   left: 44px;
   top: -7px;
   height: 17px;
   width: 296px;
   border-radius: 296px;
-  opacity: .2;
+  opacity: 0.2;
   background: #d235fd;
-  filter: blur(32px)
+  filter: blur(32px);
 }
 
 .featured-price-title:after {
-  content: "";
+  content: '';
   width: 196px;
   left: 94px;
   border-radius: 196px;
-  background: #4d94ff
+  background: #4d94ff;
 }
 
-.featured-hard-blur-bg,.featured-price-title:after {
+.featured-hard-blur-bg,
+.featured-price-title:after {
   height: 4px;
   position: absolute;
   top: -2px;
-  opacity: .5;
-  filter: blur(12px)
+  opacity: 0.5;
+  filter: blur(12px);
 }
 
 .featured-hard-blur-bg {
   width: 88px;
   left: 50%;
   margin-left: -44px;
-  background: #d235fd
+  background: #d235fd;
 }
 
 .featured-yellow-highlight-bg {
-  content: "";
+  content: '';
   position: absolute;
   left: 50%;
   margin-left: -124px;
   width: 248px;
   height: 1px;
-  background: linear-gradient(90deg,hsla(0,0%,100%,0) 15%,rgba(255,248,0,.6) 50%,hsla(0,0%,100%,0) 85%)
+  background: linear-gradient(90deg, hsla(0, 0%, 100%, 0) 15%, rgba(255, 248, 0, 0.6) 50%, hsla(0, 0%, 100%, 0) 85%);
 }
 
 .featured-vertical-hard-blur-bg {
@@ -128,9 +128,9 @@ body {
   width: 128px;
   height: 280px;
   border-radius: 280px;
-  opacity: .1;
+  opacity: 0.1;
   background: #d235fd;
-  filter: blur(48px)
+  filter: blur(48px);
 }
 
 .featured-soft-blur-bg {
@@ -141,11 +141,10 @@ body {
   width: 384px;
   height: 37px;
   border-radius: 384px;
-  opacity: .3;
+  opacity: 0.3;
   background: #ff00ff;
-  filter: blur(32px)
+  filter: blur(32px);
 }
-
 
 @layer utilities {
   .text-balance {
