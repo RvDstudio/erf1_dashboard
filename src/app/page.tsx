@@ -29,8 +29,8 @@ export default function Example() {
   };
 
   return (
-    <section className="pt-0 lg:pt-24 bg-[url('/images/1691055810.png')] bg-center bg-cover">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
+    <section className="bg-white pt-0 lg:pt-24 bg-[url('/images/1691055810.png')] bg-center bg-cover">
+      <div className="h-screen mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
         <Image
           src="/images/thumb2.png"
           className="flex items-center justify-center mx-auto mb-4"

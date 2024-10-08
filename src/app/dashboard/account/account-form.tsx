@@ -137,7 +137,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   return (
     <div className="pl-10 pt-10 pb-10">
       <div className="bg-white dark:bg-[#252525] rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e] mr-8">
-        <div className="mt-0 flex flex-col md:flex-row p-6">
+        <div className="mt-0 flex flex-col md:flex-row p-8">
           <div className="border-none md:border-r border-gray-200">
             <div className="border-b md:border-b-0 md:border-r md:pr-8 border-gray-200 dark:border-[#414141] pb-6">
               <h2 className="text-xl mb-3 text-[#888888]">User Profile</h2>
@@ -171,37 +171,37 @@ export default function AccountForm({ user }: { user: User | null }) {
                   </p>
                 </div>
               </div>
-              <div className="mt-4 text-[#888888]">
-                <div className="flex justify-between items-center space-y-4">
+              <div className="mt-6 text-[#888888] flex flex-col space-y-4">
+                <div className="flex justify-center items-center ">
                   <Label htmlFor="fullname" className="w-48">
                     Full Name
                   </Label>
                   <input
-                    className="px-4 py-1 rounded items-center dark:bg-[#414141] ml-4"
+                    className="px-4 bg-gray-100 rounded dark:bg-[#414141] ml-4"
                     id="fullName"
                     type="text"
                     value={fullname || ''}
                     onChange={(e) => setFullname(e.target.value)}
                   />
                 </div>
-                <div className="flex justify-between items-center space-y-4">
+                <div className="flex justify-between items-center ">
                   <Label htmlFor="username" className="w-48">
                     Username
                   </Label>
                   <input
-                    className="px-4 py-1 rounded items-center dark:bg-[#414141] ml-4"
+                    className="px-4 bg-gray-100 rounded items-center dark:bg-[#414141] ml-4"
                     id="username"
                     type="text"
                     value={username || ''}
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
-                <div className="flex justify-between items-center space-y-4">
+                <div className="flex justify-between items-center ">
                   <Label htmlFor="website" className="w-48">
                     Website
                   </Label>
                   <input
-                    className="px-4 py-1 rounded items-center dark:bg-[#414141] ml-4"
+                    className="px-4 bg-gray-100 rounded items-center dark:bg-[#414141] ml-4"
                     id="website"
                     type="url"
                     value={website || ''}
