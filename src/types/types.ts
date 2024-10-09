@@ -1,3 +1,4 @@
+// Path: src\types\types.ts
 export interface User {
   id: string;
   email: string;
@@ -11,10 +12,10 @@ interface Image {
   alt?: string; // Optional alt text
 }
 
-export interface Zuivel {
+export interface Product {
   id: string;
   name: string;
-  regular_price: number;
+  regular_price: string;
   description: string;
   short_description: string;
   stock_status: string;

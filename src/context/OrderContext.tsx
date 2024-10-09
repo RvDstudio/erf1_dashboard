@@ -1,25 +1,45 @@
+// Path: src\context\OrderContext.tsx
 'use client';
-// context/OrderContext.tsx
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { Zuivel } from '@/types/types'; // Assuming types are defined in a separate file
+import { Product } from '@/types/types'; // Assuming this is a generic type for products
 
 interface OrderContextType {
   orderData: {
-    selectedProducts: Zuivel[];
+    selectedProducts: Product[];
     quantities: { [key: string]: number };
   };
-  setOrderData: (data: { selectedProducts: Zuivel[]; quantities: { [key: string]: number } }) => void;
+  setOrderData: (data: { selectedProducts: Product[]; quantities: { [key: string]: number } }) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orderData, setOrderData] = useState<{
-    selectedProducts: Zuivel[];
+    selectedProducts: Product[];
     quantities: { [key: string]: number };
   }>({ selectedProducts: [], quantities: {} });
 
-  return <OrderContext.Provider value={{ orderData, setOrderData }}>{children}</OrderContext.Provider>;
+  const mergeOrderData = (newData: { selectedProducts: Product[]; quantities: { [key: string]: number } }) => {
+    setOrderData((prevData) => {
+      const newSelectedProducts = [...prevData.selectedProducts];
+      const newQuantities = { ...prevData.quantities };
+
+      // Merge quantities and avoid duplicates in selected products
+      newData.selectedProducts.forEach((product) => {
+        if (!newSelectedProducts.find((p) => p.id === product.id)) {
+          newSelectedProducts.push(product);
+        }
+        newQuantities[product.id] = (newQuantities[product.id] || 0) + (newData.quantities[product.id] || 0);
+      });
+
+      return {
+        selectedProducts: newSelectedProducts,
+        quantities: newQuantities,
+      };
+    });
+  };
+
+  return <OrderContext.Provider value={{ orderData, setOrderData: mergeOrderData }}>{children}</OrderContext.Provider>;
 };
 
 export const useOrder = () => {

@@ -1,3 +1,4 @@
+// Path: src\app\dashboard\orders\page.tsx
 'use client';
 import { useEffect, useState } from 'react';
 import { useOrder } from '@/context/OrderContext';
@@ -23,7 +24,7 @@ export default function Order() {
 
       const response = await fetch('/api/storeOrder');
       const data = await response.json();
-      setOrderData(data);
+      setOrderData(data); // Fetch and set order data
     };
 
     fetchSessionAndOrderData();

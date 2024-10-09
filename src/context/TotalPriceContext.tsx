@@ -1,12 +1,7 @@
-"use client";
+// Path: src\context\TotalPriceContext.tsx
+'use client';
 // context/TotalPriceContext.tsx
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
 interface TotalPriceContextType {
   totalPrices: { [key: string]: number };
@@ -14,9 +9,7 @@ interface TotalPriceContextType {
   getTotalPrice: () => number;
 }
 
-const TotalPriceContext = createContext<TotalPriceContextType | undefined>(
-  undefined
-);
+const TotalPriceContext = createContext<TotalPriceContextType | undefined>(undefined);
 
 export const TotalPriceProvider = ({ children }: { children: ReactNode }) => {
   const [totalPrices, setTotalPrices] = useState<{ [key: string]: number }>({});
@@ -33,9 +26,7 @@ export const TotalPriceProvider = ({ children }: { children: ReactNode }) => {
   }, [totalPrices]);
 
   return (
-    <TotalPriceContext.Provider
-      value={{ totalPrices, setTotalPrice, getTotalPrice }}
-    >
+    <TotalPriceContext.Provider value={{ totalPrices, setTotalPrice, getTotalPrice }}>
       {children}
     </TotalPriceContext.Provider>
   );
@@ -44,7 +35,7 @@ export const TotalPriceProvider = ({ children }: { children: ReactNode }) => {
 export const useTotalPrice = () => {
   const context = useContext(TotalPriceContext);
   if (!context) {
-    throw new Error("useTotalPrice must be used within a TotalPriceProvider");
+    throw new Error('useTotalPrice must be used within a TotalPriceProvider');
   }
   return context;
 };
