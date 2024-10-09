@@ -2,6 +2,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+// Define a type for the product
+interface Product {
+  id: number;
+  name: string;
+  regular_price: string;
+  description?: string;
+  shortDescription?: string;
+  images: { src: string }[];
+}
+
+// Define a type for the incoming order data
+interface OrderData {
+  selectedProducts: Product[];
+  totalPrice: number;
+  quantities?: { [productId: number]: number };
+}
+
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -9,7 +26,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(req: NextRequest) {
   try {
-    const { orderData, userId } = await req.json();
+    const { orderData, userId }: { orderData: OrderData; userId: string } = await req.json();
 
     // Log the incoming orderData and userId
     console.log('Received orderData:', orderData);
@@ -39,7 +56,7 @@ export async function POST(req: NextRequest) {
     console.log('Inserted order ID:', orderId);
 
     // Insert each product from the order into the `order_items` table
-    const insertPromises = orderData.selectedProducts.map(async (product) => {
+    const insertPromises = orderData.selectedProducts.map(async (product: Product) => {
       console.log('Inserting product:', product.name);
       console.log('Product ID:', product.id);
       console.log('Quantities:', orderData.quantities);
