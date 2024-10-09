@@ -52,10 +52,12 @@ export default function ProductList({ products, category }: ProductListProps) {
   // Handle order submission
   const handleOrder = async () => {
     const { data: session } = await supabase.auth.getSession();
-    if (!session) {
+    if (!session?.session || !session.session.user) {
       alert('You must be logged in to place an order.');
       return;
     }
+
+    const userId = session.session.user.id;
 
     // Create a map of product quantities
     const quantities = selectedProducts.reduce((acc, product) => {
@@ -75,7 +77,7 @@ export default function ProductList({ products, category }: ProductListProps) {
           quantities, // Include quantities
           totalPrice: selectedProducts.reduce((total, product) => total + product.price * product.quantity, 0), // Calculate total price
         },
-        userId: session?.user?.id,
+        userId, // Use the user ID from the session
       }),
     });
 
