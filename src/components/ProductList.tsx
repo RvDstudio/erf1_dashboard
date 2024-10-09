@@ -1,4 +1,4 @@
-// Path: src/components/ProductList.tsx
+// Path: src\components\ProductList.tsx
 'use client';
 
 import Image from 'next/image';
@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useTotalPrice } from '@/context/TotalPriceContext';
 import { PlusIcon } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
-import { useOrderStore } from '@/store/orderStore'; // Import Zustand store
+import { useProductStore } from '@/store/useProductStore'; // Using the Zustand store
 import { Product } from '@/types/types';
 
 interface ProductListProps {
@@ -16,19 +16,18 @@ interface ProductListProps {
 }
 
 export default function ProductList({ products, category }: ProductListProps) {
-  const { addProduct, setQuantity, quantities } = useOrderStore(); // Use Zustand for managing order
+  const { addProduct, updateQuantity, selectedProducts } = useProductStore(); // Using Zustand store for product management
   const { setTotalPrice } = useTotalPrice();
   const router = useRouter();
   const supabase = createClient();
 
-  // Use useCallback to memoize the calculation
+  // Memoize the total price calculation
   const calculateTotalPrice = useCallback(() => {
-    const total = products.reduce((total, product) => {
-      const quantity = quantities[product.id] || 0;
-      return total + Number(product.regular_price) * quantity;
+    const total = selectedProducts.reduce((total, product) => {
+      return total + product.price * product.quantity;
     }, 0);
     setTotalPrice(category, total);
-  }, [quantities, products, setTotalPrice, category]);
+  }, [selectedProducts, setTotalPrice, category]);
 
   useEffect(() => {
     calculateTotalPrice();
@@ -37,12 +36,17 @@ export default function ProductList({ products, category }: ProductListProps) {
   // Handle manual quantity input change
   const handleInputChange = (productId: string, value: string) => {
     const quantity = parseInt(value, 10) || 0;
-    setQuantity(productId, quantity); // Update quantity in Zustand store
+    updateQuantity(productId, quantity); // Update quantity in Zustand store
   };
 
   // Add product by clicking on the product
   const handleProductClick = (product: Product) => {
-    addProduct(product); // Add product using Zustand's addProduct
+    const existingProduct = selectedProducts.find((p) => p.id === product.id);
+    if (existingProduct) {
+      updateQuantity(product.id, existingProduct.quantity + 1);
+    } else {
+      addProduct({ ...product, quantity: 1 });
+    }
   };
 
   // Handle order submission
@@ -53,14 +57,26 @@ export default function ProductList({ products, category }: ProductListProps) {
       return;
     }
 
-    const selectedProducts = products.filter((product) => quantities[product.id] > 0);
-    await fetch('/api/storeOrder', {
+    // Create a map of product quantities
+    const quantities = selectedProducts.reduce((acc, product) => {
+      acc[product.id] = product.quantity;
+      return acc;
+    }, {} as Record<string, number>); // Ensure correct types
+
+    await fetch('/api/customerOrder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session.session?.access_token}`,
       },
-      body: JSON.stringify({ selectedProducts, quantities }),
+      body: JSON.stringify({
+        orderData: {
+          selectedProducts,
+          quantities, // Include quantities
+          totalPrice: selectedProducts.reduce((total, product) => total + product.price * product.quantity, 0), // Calculate total price
+        },
+        userId: session?.user?.id,
+      }),
     });
 
     router.push('/dashboard/orders');
@@ -72,6 +88,7 @@ export default function ProductList({ products, category }: ProductListProps) {
         {products.map((product: Product) => {
           const stockStatusText = product.stock_status === 'instock' ? 'Op voorraad' : 'Niet op voorraad';
           const stockStatusColor = product.stock_status === 'instock' ? 'bg-green-500/70' : 'bg-red-500/70';
+          const productInCart = selectedProducts.find((p) => p.id === product.id);
           return (
             <div
               key={product.id}
@@ -108,7 +125,7 @@ export default function ProductList({ products, category }: ProductListProps) {
                   type="text"
                   className="w-10 h-10 rounded-md bg-[#374c69] text-gray-100 text-center"
                   placeholder="0"
-                  value={quantities[product.id] || 0}
+                  value={productInCart?.quantity || 0}
                   onChange={(e) => handleInputChange(product.id, e.target.value)}
                   onClick={(e) => e.stopPropagation()}
                 />

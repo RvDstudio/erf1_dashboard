@@ -1,3 +1,4 @@
+// Path: src\app\api\customerOrder\route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -10,6 +11,10 @@ export async function POST(req: NextRequest) {
   try {
     const { orderData, userId } = await req.json();
 
+    // Log the incoming orderData and userId
+    console.log('Received orderData:', orderData);
+    console.log('Received userId:', userId);
+
     // Check for required fields
     if (!orderData || !userId || !Array.isArray(orderData.selectedProducts) || orderData.totalPrice == null) {
       return NextResponse.json({ error: 'Invalid order data or user ID' }, { status: 400 });
@@ -20,29 +25,41 @@ export async function POST(req: NextRequest) {
       .from('orders')
       .insert({
         user_id: userId,
-        total_price: orderData.totalPrice, // Make sure totalPrice is included
-        status: 'pending' // or another appropriate status
+        total_price: orderData.totalPrice,
+        status: 'pending',
       })
       .select();
 
-    if (orderError) throw orderError;
+    if (orderError) {
+      console.error('Error inserting order:', orderError);
+      throw orderError;
+    }
 
     const orderId = order[0]?.id;
-    // Insert each product from the order into the `order_items` table
-    const insertPromises = orderData.selectedProducts.map(async (product: { name: string, description: string, shortDescription: string, id: string, regular_price: number, images: { src: string }[] }) => {
-      const { data, error } = await supabase
-        .from('order_items')
-        .insert({
-          order_id: orderId,
-          product_name: product.name,
-          description: product.description || 'No description',
-          short_description: product.shortDescription || 'No short description',
-          quantity: String(orderData.quantities[product.id]),
-          price: String(product.regular_price),
-          image_url: product.images[0]?.src || ''
-        });
+    console.log('Inserted order ID:', orderId);
 
-      if (error) throw error; // Handle error
+    // Insert each product from the order into the `order_items` table
+    const insertPromises = orderData.selectedProducts.map(async (product) => {
+      console.log('Inserting product:', product.name);
+      console.log('Product ID:', product.id);
+      console.log('Quantities:', orderData.quantities);
+
+      const quantity = orderData.quantities?.[product.id] ?? 1; // Default to 1 if undefined
+
+      const { data, error } = await supabase.from('order_items').insert({
+        order_id: orderId,
+        product_name: product.name,
+        description: product.description || 'No description',
+        short_description: product.shortDescription || 'No short description',
+        quantity: String(quantity), // Use the fallback quantity here
+        price: String(product.regular_price),
+        image_url: product.images[0]?.src || '',
+      });
+
+      if (error) {
+        console.error('Error inserting product:', product.name, error);
+        throw error;
+      }
       return data;
     });
 

@@ -1,42 +1,47 @@
 // Path: src\app\dashboard\orders\page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { useOrder } from '@/context/OrderContext';
-import { useTotalPrice } from '@/context/TotalPriceContext'; // Use this to get total price
+import { useProductStore } from '@/store/useProductStore'; // Import Zustand store for selected products
+import { useTotalPrice } from '@/context/TotalPriceContext';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
-import { Session } from '@supabase/supabase-js'; // Import the Session type from Supabase
+import { Session } from '@supabase/supabase-js';
+import { Product } from '@/types/types';
 
 export default function Order() {
-  const { orderData, setOrderData } = useOrder();
-  const { getTotalPrice } = useTotalPrice(); // Get total price from the context
+  const { selectedProducts } = useProductStore(); // Get selected products from Zustand store
+  const { getTotalPrice } = useTotalPrice();
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [session, setSession] = useState<Session | null>(null); // Set the type as Session | null
+  const [session, setSession] = useState<Session | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
-    const fetchSessionAndOrderData = async () => {
+    const fetchSession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
-
-      const response = await fetch('/api/storeOrder');
-      const data = await response.json();
-      setOrderData(data); // Fetch and set order data
+      // Log the session data
+      console.log('Fetched session:', session);
     };
 
-    fetchSessionAndOrderData();
-  }, [setOrderData, supabase.auth]);
+    fetchSession();
+  }, [supabase.auth]);
 
   const handleOrderSubmit = async () => {
     if (!session) {
       setErrorMessage('User not authenticated');
+      console.error('User not authenticated');
       return;
     }
 
-    const totalPrice = getTotalPrice(); // Fetch total price
+    const totalPrice = getTotalPrice();
+
+    // Log selected products and total price
+    console.log('Selected Products:', selectedProducts);
+    console.log('Total Price:', totalPrice);
+    console.log('Session User ID:', session?.user?.id);
 
     try {
       const response = await fetch('/api/customerOrder', {
@@ -46,8 +51,8 @@ export default function Order() {
         },
         body: JSON.stringify({
           orderData: {
-            ...orderData, // Include selected products and other details
-            totalPrice: totalPrice, // Pass the total price to the API
+            selectedProducts,
+            totalPrice,
           },
           userId: session?.user?.id,
         }),
@@ -58,11 +63,19 @@ export default function Order() {
         setOrderSuccess(true);
         setErrorMessage('');
       } else {
-        setErrorMessage(result.message);
+        // Log the error response
+        console.error('Error Response:', result);
+        setErrorMessage(result.message || 'An error occurred while submitting your order.');
       }
     } catch (error) {
-      console.error('Error submitting order:', error);
-      setErrorMessage('Error submitting order');
+      // Catch and log any errors
+      if (error instanceof Error) {
+        console.error('Error submitting order:', error);
+        setErrorMessage(`Error submitting order: ${error.message}`);
+      } else {
+        console.error('Unknown error submitting order:', error);
+        setErrorMessage(`Unknown error submitting order: ${error}`);
+      }
     }
   };
 
@@ -70,7 +83,7 @@ export default function Order() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Order Summary</h1>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {orderData.selectedProducts.map((product) => (
+        {selectedProducts.map((product) => (
           <div
             key={product.id}
             className="flex w-full items-center justify-between border border-gray-100 rounded-2xl bg-gray-50 dark:bg-[#414141] dark:border-[#242424] p-3 shadow-3xl shadow-xs mb-4"
@@ -79,7 +92,7 @@ export default function Order() {
               <div className="w-full">
                 <Image
                   className="h-[60px] w-[60px] md:w-[70px] md:h-[70px] rounded-lg"
-                  src={product.images[0]?.src}
+                  src={(product as Product).images[0]?.src} // Type assertion to ensure TypeScript recognizes the type
                   alt="product image"
                   width={70}
                   height={70}
@@ -91,13 +104,13 @@ export default function Order() {
               <div className="text-sm md:text-base font-medium text-navy-700 dark:text-white mb-2">{product.name}</div>
               <div className="relative flex justify-between">
                 <div className="absolute right-0 -top-0 text-sm font-bold text-gray-700">
-                  € {Number(product.regular_price).toFixed(2)}
+                  € {Number(product.price).toFixed(2)}
                 </div>
               </div>
             </div>
 
             <div className="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-              <span>Quantity: {orderData.quantities[product.id]}</span>
+              <span>Quantity: {product.quantity}</span>
             </div>
           </div>
         ))}
