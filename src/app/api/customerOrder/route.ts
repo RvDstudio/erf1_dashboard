@@ -2,24 +2,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Define a type for the product
 interface Product {
   id: number;
   name: string;
   regular_price: string;
-  description?: string;
-  shortDescription?: string;
+  quantity: number;
   images: { src: string }[];
 }
 
-// Define a type for the incoming order data
 interface OrderData {
   selectedProducts: Product[];
   totalPrice: number;
-  quantities?: { [productId: number]: number };
 }
 
-// Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -28,16 +23,32 @@ export async function POST(req: NextRequest) {
   try {
     const { orderData, userId }: { orderData: OrderData; userId: string } = await req.json();
 
-    // Log the incoming orderData and userId
     console.log('Received orderData:', orderData);
     console.log('Received userId:', userId);
 
-    // Check for required fields
-    if (!orderData || !userId || !Array.isArray(orderData.selectedProducts) || orderData.totalPrice == null) {
-      return NextResponse.json({ error: 'Invalid order data or user ID' }, { status: 400 });
+    // Check if user exists
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
+
+    if (profileError || !profile) {
+      return NextResponse.json({ error: 'User not found' }, { status: 400 });
     }
 
-    // Insert a new order into the `orders` table, linked to the user
+    // Check for duplicate orders in the last 10 seconds
+    const { data: existingOrders } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('user_id', userId)
+      .gt('created_at', new Date(Date.now() - 10000).toISOString());
+
+    if (existingOrders?.length) {
+      return NextResponse.json({ error: 'Duplicate order detected' }, { status: 400 });
+    }
+
+    // Insert new order into 'orders' table
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -45,46 +56,34 @@ export async function POST(req: NextRequest) {
         total_price: orderData.totalPrice,
         status: 'pending',
       })
-      .select();
+      .select(); // Ensure .select() returns the inserted data
 
-    if (orderError) {
-      console.error('Error inserting order:', orderError);
-      throw orderError;
+    if (orderError || !order || order.length === 0) {
+      throw new Error('Error inserting order');
     }
 
-    const orderId = order[0]?.id;
-    console.log('Inserted order ID:', orderId);
+    const orderId = order[0].id;
 
-    // Insert each product from the order into the `order_items` table
+    // Insert each product into the 'order_items' table
     const insertPromises = orderData.selectedProducts.map(async (product: Product) => {
-      console.log('Inserting product:', product.name);
-      console.log('Product ID:', product.id);
-      console.log('Quantities:', orderData.quantities);
-
-      const quantity = orderData.quantities?.[product.id] ?? 1; // Default to 1 if undefined
-
-      const { data, error } = await supabase.from('order_items').insert({
+      const { error } = await supabase.from('order_items').insert({
         order_id: orderId,
         product_name: product.name,
-        description: product.description || 'No description',
-        short_description: product.shortDescription || 'No short description',
-        quantity: String(quantity), // Use the fallback quantity here
-        price: String(product.regular_price),
-        image_url: product.images[0]?.src || '',
+        quantity: product.quantity, // Use the correct type here
+        price: product.regular_price, // Assuming price is stored as string
+        image_url: product.images[0]?.src || '', // Fallback for missing image
       });
 
       if (error) {
-        console.error('Error inserting product:', product.name, error);
-        throw error;
+        throw error; // Throw error to ensure it gets caught
       }
-      return data;
     });
 
-    await Promise.all(insertPromises);
+    await Promise.all(insertPromises); // Ensure all product insertions are done before returning
 
     return NextResponse.json({ message: 'Order stored successfully!' }, { status: 200 });
   } catch (error) {
-    console.error('Error storing order:', error);
+    console.error('Error storing order:', error); // Log the actual error for debugging
     return NextResponse.json({ error: 'Error storing order' }, { status: 500 });
   }
 }

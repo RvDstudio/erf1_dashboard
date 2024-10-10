@@ -1,7 +1,7 @@
 // Path: src\app\dashboard\orders\page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { useProductStore } from '@/store/useProductStore'; // Import Zustand store for selected products
+import { useProductStore } from '@/store/useProductStore';
 import { useTotalPrice } from '@/context/TotalPriceContext';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
@@ -9,11 +9,12 @@ import { Session } from '@supabase/supabase-js';
 import { Product } from '@/types/types';
 
 export default function Order() {
-  const { selectedProducts } = useProductStore(); // Get selected products from Zustand store
+  const { selectedProducts } = useProductStore();
   const { getTotalPrice } = useTotalPrice();
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [session, setSession] = useState<Session | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Submission state lock
   const supabase = createClient();
 
   useEffect(() => {
@@ -22,26 +23,22 @@ export default function Order() {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
-      // Log the session data
-      console.log('Fetched session:', session);
     };
 
     fetchSession();
-  }, [supabase.auth]);
+  }, []);
 
   const handleOrderSubmit = async () => {
+    if (isSubmitting || orderSuccess) return; // Prevent multiple submissions
+    setIsSubmitting(true); // Lock submission
+
     if (!session) {
       setErrorMessage('User not authenticated');
-      console.error('User not authenticated');
+      setIsSubmitting(false); // Reset submission state
       return;
     }
 
     const totalPrice = getTotalPrice();
-
-    // Log selected products and total price
-    console.log('Selected Products:', selectedProducts);
-    console.log('Total Price:', totalPrice);
-    console.log('Session User ID:', session?.user?.id);
 
     try {
       const response = await fetch('/api/customerOrder', {
@@ -63,19 +60,16 @@ export default function Order() {
         setOrderSuccess(true);
         setErrorMessage('');
       } else {
-        // Log the error response
-        console.error('Error Response:', result);
-        setErrorMessage(result.message || 'An error occurred while submitting your order.');
+        setErrorMessage(result.message || 'Error submitting order.');
       }
     } catch (error) {
-      // Catch and log any errors
       if (error instanceof Error) {
-        console.error('Error submitting order:', error);
         setErrorMessage(`Error submitting order: ${error.message}`);
       } else {
-        console.error('Unknown error submitting order:', error);
-        setErrorMessage(`Unknown error submitting order: ${error}`);
+        setErrorMessage(`Unknown error: ${error}`);
       }
+    } finally {
+      setIsSubmitting(false); // Unlock submission
     }
   };
 
@@ -92,7 +86,7 @@ export default function Order() {
               <div className="w-full">
                 <Image
                   className="h-[60px] w-[60px] md:w-[70px] md:h-[70px] rounded-lg"
-                  src={(product as Product).images[0]?.src} // Type assertion to ensure TypeScript recognizes the type
+                  src={(product as Product).images[0]?.src}
                   alt="product image"
                   width={70}
                   height={70}
@@ -115,8 +109,12 @@ export default function Order() {
           </div>
         ))}
       </div>
-      <button className="bg-[#374C69] text-white p-2 rounded mt-4" onClick={handleOrderSubmit}>
-        Place Order
+      <button
+        className={`bg-[#374C69] text-white p-2 rounded mt-4 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+        onClick={handleOrderSubmit}
+        disabled={isSubmitting} // Disable button during submission
+      >
+        {isSubmitting ? 'Placing Order...' : 'Place Order'}
       </button>
       {orderSuccess && <div className="mt-4 text-green-600 font-bold">Your order has been successfully booked!</div>}
       {errorMessage && <div className="mt-4 text-red-600 font-bold">{errorMessage}</div>}

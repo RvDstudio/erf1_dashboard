@@ -6,7 +6,6 @@ import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTotalPrice } from '@/context/TotalPriceContext';
 import { PlusIcon } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
 import { useProductStore } from '@/store/useProductStore'; // Using the Zustand store
 import { Product } from '@/types/types';
 
@@ -19,7 +18,6 @@ export default function ProductList({ products, category }: ProductListProps) {
   const { addProduct, updateQuantity, selectedProducts } = useProductStore(); // Using Zustand store for product management
   const { setTotalPrice } = useTotalPrice();
   const router = useRouter();
-  const supabase = createClient();
 
   // Memoize the total price calculation
   const calculateTotalPrice = useCallback(() => {
@@ -49,38 +47,8 @@ export default function ProductList({ products, category }: ProductListProps) {
     }
   };
 
-  // Handle order submission
-  const handleOrder = async () => {
-    const { data: session } = await supabase.auth.getSession();
-    if (!session?.session || !session.session.user) {
-      alert('You must be logged in to place an order.');
-      return;
-    }
-
-    const userId = session.session.user.id;
-
-    // Create a map of product quantities
-    const quantities = selectedProducts.reduce((acc, product) => {
-      acc[product.id] = product.quantity;
-      return acc;
-    }, {} as Record<string, number>); // Ensure correct types
-
-    await fetch('/api/customerOrder', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.session?.access_token}`,
-      },
-      body: JSON.stringify({
-        orderData: {
-          selectedProducts,
-          quantities, // Include quantities
-          totalPrice: selectedProducts.reduce((total, product) => total + product.price * product.quantity, 0), // Calculate total price
-        },
-        userId, // Use the user ID from the session
-      }),
-    });
-
+  // Redirect to the order page when clicking "Bestellen"
+  const handleOrderClick = () => {
     router.push('/dashboard/orders');
   };
 
@@ -137,7 +105,7 @@ export default function ProductList({ products, category }: ProductListProps) {
         })}
       </div>
       <button
-        onClick={handleOrder}
+        onClick={handleOrderClick} // Updated to only navigate to the order page
         className="flex items-center mt-4 pl-2 pr-4 py-1 text-sm bg-[#374c69] mb-6 text-white rounded-md"
       >
         <PlusIcon className="w-4 h-4 inline mr-1" />
