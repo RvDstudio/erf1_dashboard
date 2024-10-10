@@ -1,5 +1,5 @@
-// Path: src\components\Header.tsx
 'use client';
+
 import { useEffect, useState } from 'react';
 import { Bell, Search } from 'lucide-react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -9,28 +9,30 @@ import { createClient } from '@/utils/supabase/client'; // Client-side Supabase 
 import Link from 'next/link';
 import { User } from '@/types/types';
 import { MobileSidebar } from './MobileSidebar';
-import { FC } from 'react'; // Ensure you import FC
+import { FC } from 'react';
 import Image from 'next/image';
 
 const AvatarFallback: FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div>{children}</div>; // Example implementation
+  return <div>{children}</div>;
 };
 
 export default function Header() {
-  const [user, setUser] = useState<User | null>(null); // Update state type
+  const [user, setUser] = useState<User | null>(null);
   const [avatarUrl, setAvatarUrl] = useState('/images/default.png');
+  const [username, setUsername] = useState(''); // State for username
+  const [isScrolled, setIsScrolled] = useState(false); // Track scroll state
   const supabase = createClient();
 
   useEffect(() => {
     async function getUserData() {
-      // Fetch user from Supabase client-side
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        setUser(user as unknown as User); // Type assertion to match local User type
-        // Fetch the user's profile to get the avatar URL
-        const { data } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
+        setUser(user as unknown as User);
+
+        // Fetch the user's profile to get the avatar URL and username
+        const { data } = await supabase.from('profiles').select('avatar_url, username').eq('id', user.id).single();
 
         if (data?.avatar_url) {
           const {
@@ -39,18 +41,46 @@ export default function Header() {
 
           setAvatarUrl(publicUrl || '/images/default.png');
         }
+
+        if (data?.username) {
+          setUsername(data.username); // Set username
+        }
       }
     }
 
     getUserData();
   }, [supabase]);
 
+  // Add scroll event listener to track when the user scrolls
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll); // Cleanup event listener
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-white dark:bg-[#171717] border-b border-gray-200 dark:border-[#2e2e2e]">
-      <div className="md:hidden ">
+    <header
+      className={`sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-[#f7f7f7] transition-shadow duration-300 ${
+        isScrolled ? 'shadow-md' : ''
+      }`}
+    >
+      <div className="md:hidden">
         <MobileSidebar />
       </div>
-      <div className="flex items-center space-x-8"></div>
+
+      <div className="flex items-center space-x-8">
+        {user && <div className="text-lg font-medium text-gray-900 pl-4">Welcome: {username}</div>}
+      </div>
+
       <div className="flex items-center space-x-4">
         <Button variant="ghost" size="icon">
           <Search className="h-5 w-5" />
