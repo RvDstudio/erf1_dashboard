@@ -45,7 +45,7 @@ const Sidebar = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Link
-                      className={`w-full flex items-center space-x-2 hover:bg-[#6699CC] dark:hover:bg-[#292929] active:bg-gray-300 py-2 px-2 rounded-lg text-white ${
+                      className={`w-full flex items-center space-x-2 hover:bg-[#6699CC] dark:hover:bg-[#292929] active:bg-gray-300 py-2.5 px-2.5 rounded-lg text-white ${
                         isActive(menu.path) ? 'bg-[#30425b] border border-[#3f5777] text-white dark:bg-[#292929]' : ''
                       }`}
                       href={menu.path}

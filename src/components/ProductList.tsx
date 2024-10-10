@@ -12,10 +12,11 @@ import { Product } from '@/types/types';
 interface ProductListProps {
   products: Product[];
   category: string;
+  price: number;
 }
 
 export default function ProductList({ products, category }: ProductListProps) {
-  const { addProduct, updateQuantity, selectedProducts } = useProductStore(); // Using Zustand store for product management
+  const { addProduct, updateQuantity, selectedProducts, clearProductQuantities } = useProductStore(); // Access clearProductQuantities
   const { setTotalPrice } = useTotalPrice();
   const router = useRouter();
 
@@ -31,24 +32,27 @@ export default function ProductList({ products, category }: ProductListProps) {
     calculateTotalPrice();
   }, [calculateTotalPrice]);
 
-  // Handle manual quantity input change
-  const handleInputChange = (productId: string, value: string) => {
-    const quantity = parseInt(value, 10) || 0;
-    updateQuantity(productId, quantity); // Update quantity in Zustand store
-  };
-
-  // Add product by clicking on the product
   const handleProductClick = (product: Product) => {
-    const existingProduct = selectedProducts.find((p) => p.id === product.id);
+    const productId = Number(product.id); // Convert id to number
+    const existingProduct = selectedProducts.find((p) => p.id === productId);
     if (existingProduct) {
-      updateQuantity(product.id, existingProduct.quantity + 1);
+      updateQuantity(productId, existingProduct.quantity + 1);
     } else {
-      addProduct({ ...product, quantity: 1 });
+      addProduct({ ...product, id: productId, quantity: 1 }); // Ensure the id is stored as a number
     }
   };
 
-  // Redirect to the order page when clicking "Bestellen"
+  const handleInputChange = (productId: string, value: string) => {
+    const quantity = parseInt(value, 10) || 0;
+    updateQuantity(Number(productId), quantity); // Convert productId to number
+  };
+
+  // Redirect to the order page when clicking "Bestellen" and clear form on success
   const handleOrderClick = () => {
+    // Assuming the order submission was successful, we clear the quantities
+    clearProductQuantities(); // Clear the form by resetting quantities
+
+    // Redirect to order page
     router.push('/dashboard/orders');
   };
 
@@ -105,7 +109,7 @@ export default function ProductList({ products, category }: ProductListProps) {
         })}
       </div>
       <button
-        onClick={handleOrderClick} // Updated to only navigate to the order page
+        onClick={handleOrderClick} // Updated to clear form and navigate to the order page
         className="flex items-center mt-4 pl-2 pr-4 py-1 text-sm bg-[#374c69] mb-6 text-white rounded-md"
       >
         <PlusIcon className="w-4 h-4 inline mr-1" />

@@ -2,18 +2,17 @@
 import { create } from 'zustand';
 
 interface Product {
+  price: number;
   id: string;
   name: string;
-  price: number;
   quantity: number;
 }
 
 interface ProductStore {
   selectedProducts: Product[];
   addProduct: (product: Product) => void;
-  removeProduct: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearProducts: () => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  clearProductQuantities: () => void; // Add function to clear product quantities
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -22,13 +21,17 @@ export const useProductStore = create<ProductStore>((set) => ({
     set((state) => ({
       selectedProducts: [...state.selectedProducts, product],
     })),
-  removeProduct: (productId) =>
-    set((state) => ({
-      selectedProducts: state.selectedProducts.filter((p) => p.id !== productId),
-    })),
   updateQuantity: (productId, quantity) =>
     set((state) => ({
-      selectedProducts: state.selectedProducts.map((p) => (p.id === productId ? { ...p, quantity } : p)),
+      selectedProducts: state.selectedProducts.map((product) =>
+        product.id === productId ? { ...product, quantity } : product
+      ),
     })),
-  clearProducts: () => set({ selectedProducts: [] }),
+  clearProductQuantities: () =>
+    set((state) => ({
+      selectedProducts: state.selectedProducts.map((product) => ({
+        ...product,
+        quantity: 0, // Reset quantity to 0
+      })),
+    })),
 }));

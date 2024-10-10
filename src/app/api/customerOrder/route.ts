@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   regular_price: string;
   quantity: number;
