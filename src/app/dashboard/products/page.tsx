@@ -1,8 +1,7 @@
+// Path: src\app\dashboard\products\page.tsx
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ZuivelProducts from '@/components/ZuivelProducts';
 import CombinedTotalPrice from '@/components/CombinedTotalPrice';
-import KaasProducts from '@/components/KaasProducts';
-import VleesProducts from '@/components/VleesProducts';
+import ProductFetcher from '@/components/ProductFetcher';
 
 export default function Dashboard() {
   return (
@@ -24,7 +23,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <ZuivelProducts />
+                  <ProductFetcher category={29} />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
@@ -40,7 +39,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <KaasProducts />
+                  <ProductFetcher category={27} />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
@@ -56,7 +55,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <VleesProducts />
+                  <ProductFetcher category={28} />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
