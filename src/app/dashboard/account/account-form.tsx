@@ -9,15 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { MoveHorizontalIcon, SearchIcon } from 'lucide-react';
 
 export default function AccountForm({ user }: { user: User | null }) {
   const supabase = createClient();
@@ -137,7 +128,7 @@ export default function AccountForm({ user }: { user: User | null }) {
   return (
     <div className="pl-10 pt-10 pb-10">
       <div className="bg-white dark:bg-[#252525] rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e] mr-8">
-        <div className="mt-0 flex flex-col md:flex-row p-6">
+        <div className="mt-0 flex-1 md:flex flex-col md:flex-row p-6">
           <div className="border-none md:border-r border-gray-200">
             <div className="border-b md:border-b-0 md:border-r md:pr-8 border-gray-200 dark:border-[#414141] pb-6">
               <h2 className="text-xl mb-3 text-[#888888]">User Profile</h2>
@@ -222,55 +213,6 @@ export default function AccountForm({ user }: { user: User | null }) {
                   Sign out
                 </Button>
               </div>
-            </div>
-          </div>
-          <div className="md:pl-6 w-full">
-            <div className="flex items-center justify-between mb-6 mt-2">
-              <h1 className="text-xl text-[#888888]">Recente bestellingen</h1>
-              <div className="relative">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-[#252525]" />
-                <Input
-                  type="search"
-                  placeholder="Search team members..."
-                  className="pl-10 pr-4 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-[#414141] dark:text-gray-200"
-                />
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="bg-white rounded-lg shadow-sm p-4 dark:bg-[#414141] relative">
-                <div className="flex items-center space-x-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src="/placeholder-user.jpg" alt="User Avatar" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="text-lg font-medium">Biologische sinaasappel vla</h3>
-                      <Badge
-                        variant="outline"
-                        className="bg-gray-100 text-gray-700 dark:bg-[#252525] dark:text-gray-300"
-                      >
-                        Onze Zuivel
-                      </Badge>
-                    </div>
-                    <p className="text-gray-500 dark:text-[#252525] text-sm">Erf1 zuivel & meer</p>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="rounded-full">
-                        <MoveHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">Team member actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Bestelling bekijken</DropdownMenuItem>
-                      <DropdownMenuItem>Opnieuw bestellen</DropdownMenuItem>
-                      <DropdownMenuItem>verwijderen</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-              {/* Repeated orders block remain unchanged */}
             </div>
           </div>
         </div>

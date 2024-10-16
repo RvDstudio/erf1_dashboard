@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       .insert({
         user_id: userId,
         total_price: orderData.totalPrice, // Make sure totalPrice is included
-        status: 'pending', // or another appropriate status
+        status: 'Niet betaald', // or another appropriate status
       })
       .select();
 
