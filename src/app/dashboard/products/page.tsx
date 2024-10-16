@@ -1,9 +1,7 @@
 // Path: src\app\dashboard\products\page.tsx
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CombinedTotalPrice from '@/components/CombinedTotalPrice';
-import ZuivelProducts from '@/components/ZuivelProducts';
-import KaasProducts from '@/components/KaasProducts';
-import VleesProducts from '@/components/VleesProducts';
+import ProductFetcher from '@/components/ProductFetcher';
 
 export default function Dashboard() {
   return (
@@ -25,12 +23,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <ZuivelProducts />
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong> products
-                  </div>
+                  <ProductFetcher category={29} />
                 </div>
               </div>
             </TabsContent>
@@ -41,12 +34,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <KaasProducts />
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong> products
-                  </div>
+                  <ProductFetcher category={27} />
                 </div>
               </div>
             </TabsContent>
@@ -57,12 +45,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <VleesProducts />
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong> products
-                  </div>
+                  <ProductFetcher category={28} />
                 </div>
               </div>
             </TabsContent>

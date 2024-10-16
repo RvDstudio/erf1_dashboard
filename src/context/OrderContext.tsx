@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Zuivel, Vlees, Kaas } from '@/types/types';
 
+// Define a common product type (combining Zuivel, Vlees, and Kaas)
 type Product = Zuivel | Vlees | Kaas;
 
 interface OrderContextType {
@@ -26,21 +27,21 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     setOrderData((prevData) => {
       const updatedQuantities = { ...prevData.quantities, [product.id]: quantity };
 
-      // Check if the product already exists in selectedProducts
-      const existingProductIndex = prevData.selectedProducts.findIndex((p) => p.id === product.id);
-
       let updatedSelectedProducts = [...prevData.selectedProducts];
 
+      // Find product by ID in the selected products
+      const productIndex = prevData.selectedProducts.findIndex((p) => p.id === product.id);
+
       if (quantity > 0) {
-        if (existingProductIndex !== -1) {
-          // If product exists, update it
-          updatedSelectedProducts[existingProductIndex] = { ...product };
+        if (productIndex !== -1) {
+          // Update product if it exists
+          updatedSelectedProducts[productIndex] = { ...product };
         } else {
-          // Add new product to selectedProducts
+          // Add new product if it does not exist
           updatedSelectedProducts.push(product);
         }
       } else {
-        // Remove product if quantity is 0
+        // Remove product if quantity is zero
         updatedSelectedProducts = updatedSelectedProducts.filter((p) => p.id !== product.id);
       }
 
