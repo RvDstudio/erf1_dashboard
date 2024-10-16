@@ -1,7 +1,9 @@
 // Path: src\app\dashboard\products\page.tsx
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CombinedTotalPrice from '@/components/CombinedTotalPrice';
-import ProductFetcher from '@/components/ProductFetcher';
+import ZuivelProducts from '@/components/ZuivelProducts';
+import KaasProducts from '@/components/KaasProducts';
+import VleesProducts from '@/components/VleesProducts';
 
 export default function Dashboard() {
   return (
@@ -23,7 +25,7 @@ export default function Dashboard() {
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <ProductFetcher category={29} />
+                  <ZuivelProducts />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
@@ -35,11 +37,11 @@ export default function Dashboard() {
             <TabsContent value="kaas">
               <div className="p-0 md:p-4">
                 <div className="p-4 flex items-center justify-between">
-                  <div className="text-[#374c69] text-md font-medium">Onze Zuivel</div>
+                  <div className="text-[#374c69] text-md font-medium">Onze Kaas</div>
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <ProductFetcher category={27} />
+                  <KaasProducts />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
@@ -51,11 +53,11 @@ export default function Dashboard() {
             <TabsContent value="vlees">
               <div className="p-0 md:p-4">
                 <div className="p-4 flex items-center justify-between">
-                  <div className="text-[#374c69] text-md font-medium">Onze Zuivel</div>
+                  <div className="text-[#374c69] text-md font-medium">Onze Vlees</div>
                   <CombinedTotalPrice />
                 </div>
                 <div>
-                  <ProductFetcher category={28} />
+                  <VleesProducts />
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">

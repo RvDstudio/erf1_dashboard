@@ -1,20 +1,20 @@
-// Path: src\components\KaasList.tsx
+// Path: src\components\VleesList.tsx
 'use client';
 
 import Image from 'next/image';
 import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { Kaas } from '@/types/types';
+import { Vlees } from '@/types/types';
 import { useTotalPrice } from '@/context/TotalPriceContext';
 import { useOrder } from '@/context/OrderContext';
 import { PlusIcon } from 'lucide-react';
 
-interface KaasListProps {
-  kaas: Kaas[];
+interface VleesListProps {
+  vlees: Vlees[];
 }
 
-export default function KaasList({ kaas }: KaasListProps) {
+export default function VleesList({ vlees }: VleesListProps) {
   const { orderData, updateProductQuantity } = useOrder();
   const { quantities } = orderData;
   const { setTotalPrice } = useTotalPrice();
@@ -22,15 +22,15 @@ export default function KaasList({ kaas }: KaasListProps) {
   const supabase = createClient();
 
   useEffect(() => {
-    const total = kaas.reduce((total, product) => {
+    const total = vlees.reduce((total, product) => {
       const quantity = quantities[product.id] || 0;
       return total + Number(product.regular_price) * quantity;
     }, 0);
-    setTotalPrice('kaas', total);
-  }, [quantities, kaas, setTotalPrice]);
+    setTotalPrice('vlees', total);
+  }, [quantities, vlees, setTotalPrice]);
 
   const handleInputChange = useCallback(
-    (product: Kaas, value: string) => {
+    (product: Vlees, value: string) => {
       const quantity = parseInt(value, 10) || 0;
       updateProductQuantity(product, quantity);
     },
@@ -38,7 +38,7 @@ export default function KaasList({ kaas }: KaasListProps) {
   );
 
   const handleProductClick = useCallback(
-    (product: Kaas) => {
+    (product: Vlees) => {
       const newQuantity = (quantities[product.id] || 0) + 1;
       updateProductQuantity(product, newQuantity);
     },
@@ -71,7 +71,7 @@ export default function KaasList({ kaas }: KaasListProps) {
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {kaas.map((product) => {
+        {vlees.map((product) => {
           const stockStatusText = product.stock_status === 'instock' ? 'Op voorraad' : 'Niet op voorraad';
           const stockStatusColor = product.stock_status === 'instock' ? 'bg-green-500/70' : 'bg-red-500/70';
 
@@ -86,7 +86,7 @@ export default function KaasList({ kaas }: KaasListProps) {
                   <Image
                     className="h-[60px] w-[60px] md:w-[70px] md:h-[70px] rounded-lg"
                     src={product.images[0].src}
-                    alt="kaas image"
+                    alt="vlees image"
                     loading="lazy"
                     width={500}
                     height={500}

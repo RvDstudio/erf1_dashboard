@@ -4263,3 +4263,8 @@ yoga-layout@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/yoga-layout/-/yoga-layout-3.1.0.tgz#04d00d7c2160635640dc79b48e7e4fc6a2fba2b2"
   integrity sha512-auzJ8lEovThZIpR8wLGWNo/JEj4VTO79q9/gOJ0dWb3shAYPFdX3t9VN0fC0v+jeQF77STUdCzebLwRMqzn5gQ==
+
+zustand@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.0.tgz#71f8aaecf185592a3ba2743d7516607361899da9"
+  integrity sha512-LE+VcmbartOPM+auOjCCLQOsQ05zUTp8RkgwRzefUk+2jISdMMFnxvyTjA4YNWr5ZGXYbVsEMZosttuxUBkojQ==
