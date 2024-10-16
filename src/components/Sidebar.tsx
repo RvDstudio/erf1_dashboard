@@ -1,5 +1,6 @@
+// Path: src\components\Sidebar.tsx
 'use client';
-import { ArrowLeftSquareIcon, Milk, Atom } from 'lucide-react';
+import { ArrowLeftSquareIcon, Milk, Tractor } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menus } from '@/constants/constants';
@@ -25,13 +26,13 @@ const Sidebar = () => {
         className={`text-white absolute -right-3 bg-[#374c69] top-5 cursor-pointer z-50 ${!open && 'rotate-180'}`}
       />
       <div className="flex gap-x-2 items-center border-b border-[#425b7b] pb-[18px]">
-        <Atom strokeWidth={1} className={`text-white pl-1 dark:text-white cursor-pointer duration-500 h-8 w-8`} />
+        <Tractor strokeWidth={1} className={`text-white pl-1 dark:text-white cursor-pointer duration-500 h-8 w-8`} />
         <h1
           className={`text-white dark:text-white origin-left font-bold text-[22px] duration-200 ${
             !open && 'scale-0 hidden'
           }`}
         >
-          Rhyno <span className="text-[#6699CC]">| Starter</span>
+          Erf1 <span className="text-[#6699CC]"> Bestellingen</span>
         </h1>
       </div>
 

@@ -1,47 +1,34 @@
 // Path: src\context\OrderContext.tsx
 'use client';
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { Zuivel, Vlees, Kaas } from '@/types/types';
-
-type Product = Zuivel | Vlees | Kaas;
+import { Zuivel } from '@/types/types'; // Assuming types are defined in a separate file
 
 interface OrderContextType {
   orderData: {
-    selectedProducts: Product[];
+    selectedProducts: Zuivel[];
     quantities: { [key: string]: number };
   };
-  setOrderData: (data: { selectedProducts: Product[]; quantities: { [key: string]: number } }) => void;
-  updateProductQuantity: (product: Product, quantity: number) => void;
+  setOrderData: (data: { selectedProducts: Zuivel[]; quantities: { [key: string]: number } }) => void;
+  updateProductQuantity: (product: Zuivel, quantity: number) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orderData, setOrderData] = useState<{
-    selectedProducts: Product[];
+    selectedProducts: Zuivel[];
     quantities: { [key: string]: number };
   }>({ selectedProducts: [], quantities: {} });
 
-  const updateProductQuantity = (product: Product, quantity: number) => {
+  const updateProductQuantity = (product: Zuivel, quantity: number) => {
     setOrderData((prevData) => {
       const updatedQuantities = { ...prevData.quantities, [product.id]: quantity };
 
-      // Check if the product already exists in selectedProducts
-      const existingProductIndex = prevData.selectedProducts.findIndex((p) => p.id === product.id);
-
-      let updatedSelectedProducts = [...prevData.selectedProducts];
+      // Check if the product is already selected and if the quantity is greater than 0
+      let updatedSelectedProducts = prevData.selectedProducts.filter((p) => p.id !== product.id);
 
       if (quantity > 0) {
-        if (existingProductIndex !== -1) {
-          // If product exists, update it
-          updatedSelectedProducts[existingProductIndex] = { ...product };
-        } else {
-          // Add new product to selectedProducts
-          updatedSelectedProducts.push(product);
-        }
-      } else {
-        // Remove product if quantity is 0
-        updatedSelectedProducts = updatedSelectedProducts.filter((p) => p.id !== product.id);
+        updatedSelectedProducts = [...updatedSelectedProducts, product]; // Add or update product if quantity > 0
       }
 
       return {
