@@ -18,7 +18,7 @@ type Product = {
 
 type Order = {
   id: string;
-  order_date: string;
+  created_at: string; // Change order_date to created_at
   total_price: number;
   status: string;
   products: Product[];
@@ -83,7 +83,7 @@ export default function OrderHistory() {
             <Text style={styles.bold}>Order ID:</Text> {order.id}
           </Text>
           <Text style={styles.orderInfo}>
-            <Text style={styles.bold}>Order Date:</Text> {new Date(order.order_date).toLocaleDateString()}
+            <Text style={styles.bold}>Order Date:</Text> {new Date(order.created_at).toLocaleDateString()}
           </Text>
           <Text style={styles.orderInfo}>
             <Text style={styles.bold}>Total Price:</Text> €{order.total_price.toFixed(2)}
@@ -122,12 +122,12 @@ export default function OrderHistory() {
         <p>Loading...</p>
       ) : (
         <Table>
-          <TableCaption>A list of your orders.</TableCaption>
+          <TableCaption className="text-[#374C69]">Een lijst met uw bestellingen..</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Order ID</TableHead>
               <TableHead>Order Date</TableHead>
-              <TableHead>Total Price</TableHead>
+              <TableHead>Totale Prijs</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -141,7 +141,7 @@ export default function OrderHistory() {
                       <Button className="text-white bg-[#374C69] hover:bg-[#374C69]/90">{order.id}</Button>
                     </Link>
                   </TableCell>
-                  <TableCell>{new Date(order.order_date).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(order.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>
@@ -154,7 +154,7 @@ export default function OrderHistory() {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center">
-                  No orders found.
+                  Geen orders gevonden.
                 </TableCell>
               </TableRow>
             )}
