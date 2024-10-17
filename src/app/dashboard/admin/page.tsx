@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
+import clsx from 'clsx'; // To conditionally apply classes
 
 type Order = {
   id: string;
   total_price: number;
-  status: 'Betaald' | 'Pending';
+  status: 'Betaald' | 'Niet betaald';
 };
 
 export default function AdminPage() {
@@ -56,7 +57,7 @@ export default function AdminPage() {
     // Update the order status in Supabase
     const { error } = await supabase
       .from('orders')
-      .update({ status: newStatus ? 'Betaald' : 'Pending' })
+      .update({ status: newStatus ? 'Betaald' : 'Niet betaald' })
       .eq('id', orderId);
 
     if (error) {
@@ -66,7 +67,7 @@ export default function AdminPage() {
       // Update the local state
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
-          order.id === orderId ? { ...order, status: newStatus ? 'Betaald' : 'Pending' } : order
+          order.id === orderId ? { ...order, status: newStatus ? 'Betaald' : 'Niet betaald' } : order
         )
       );
     }
@@ -81,42 +82,61 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">Admin Page</h1>
-      <p className="mb-4">Welcome, admin!</p>
-      <h2 className="text-xl font-medium mb-2">Orders</h2>
-      <Table>
-        <TableCaption>List of all orders in the system</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Order ID</TableHead>
-            <TableHead>Total Price</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.length > 0 ? (
-            orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell>{order.id}</TableCell>
-                <TableCell>€{order.total_price}</TableCell>
-                <TableCell>
-                  <Switch
-                    checked={order.status === 'Betaald'}
-                    onCheckedChange={(checked) => handleStatusChange(order.id, checked)}
-                  />
+    <div className="pt-10 pl-10 pr-8 pb-10 bg-[#ECF0F6] dark:bg-[#171717]">
+      <div className="bg-white dark:bg-[#252525] p-8 rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e]">
+        <h1 className="text-xl font-medium mb-4 text-[#6699CC]">Orders Page</h1>
+        <Table>
+          <TableCaption>Lijst met alle bestellingen in het systeem</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Order ID</TableHead>
+              <TableHead>Total Price</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell>{order.id}</TableCell>
+                  <TableCell>€{order.total_price}</TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    {/* Left Text: "Niet betaald" */}
+                    <span
+                      className={clsx(
+                        'text-sm font-medium',
+                        order.status === 'Niet betaald' ? 'text-red-500' : 'text-gray-500'
+                      )}
+                    >
+                      Niet betaald
+                    </span>
+                    {/* Switch Component */}
+                    <Switch
+                      checked={order.status === 'Betaald'}
+                      onCheckedChange={(checked) => handleStatusChange(order.id, checked)}
+                    />
+                    {/* Right Text: "Betaald" */}
+                    <span
+                      className={clsx(
+                        'text-sm font-medium',
+                        order.status === 'Betaald' ? 'text-green-500' : 'text-gray-500'
+                      )}
+                    >
+                      Betaald
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center">
+                  No orders found.
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={3} className="text-center">
-                No orders found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
