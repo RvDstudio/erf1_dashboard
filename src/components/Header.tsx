@@ -47,8 +47,15 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-white dark:bg-[#171717] border-b border-gray-200 dark:border-[#2e2e2e]">
-      <div className="md:hidden ">
-        <MobileSidebar />
+      <div className="flex items-center space-x-4">
+        <div className="md:hidden">
+          <MobileSidebar />
+        </div>
+        {user && (
+          <div className="text-sm font-bold text-[#888888] ">
+            Welkom terug: <span className="text-[#6699CC]">{user.email}</span>
+          </div>
+        )}
       </div>
       <div className="flex items-center space-x-8"></div>
       <div className="flex items-center space-x-4">
