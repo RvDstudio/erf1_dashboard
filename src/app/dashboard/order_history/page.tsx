@@ -115,52 +115,54 @@ export default function OrderHistory() {
   );
 
   return (
-    <div className="p-4 pt-6">
-      <h1 className="text-xl font-medium mb-2">Order History</h1>
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <Table>
-          <TableCaption className="text-[#374C69]">Een lijst met uw bestellingen..</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Totale Prijs</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders.length > 0 ? (
-              orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell>
-                    <Link href={`/dashboard/order_history/${order.id}`}>
-                      <Button className="text-white bg-[#374C69] hover:bg-[#374C69]/90">{order.id}</Button>
-                    </Link>
-                  </TableCell>
-                  <TableCell>{new Date(order.created_at).toLocaleDateString()}</TableCell>
-                  <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
-                  <TableCell>{order.status}</TableCell>
-                  <TableCell>
-                    <PDFDownloadLink document={<OrderPDFDocument order={order} />} fileName={`order_${order.id}.pdf`}>
-                      <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">Download PDF</Button>
-                    </PDFDownloadLink>
+    <div className="pt-10 pl-10 pr-8 pb-10 bg-[#ECF0F6] dark:bg-[#171717]">
+      <div className="bg-white dark:bg-[#252525] p-8 rounded-lg shadow-sm border border-gray-200 dark:border-[#2e2e2e]">
+        <h1 className="text-xl font-medium mb-2">Order History</h1>
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Table>
+            <TableCaption className="text-[#374C69]">Een lijst met uw bestellingen..</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Order Date</TableHead>
+                <TableHead>Totale Prijs</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.length > 0 ? (
+                orders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell>
+                      <Link href={`/dashboard/order_history/${order.id}`}>
+                        <Button className="text-white bg-[#374C69] hover:bg-[#374C69]/90">{order.id}</Button>
+                      </Link>
+                    </TableCell>
+                    <TableCell>{new Date(order.created_at).toLocaleDateString()}</TableCell>
+                    <TableCell>€ {order.total_price.toFixed(2)}</TableCell>
+                    <TableCell>{order.status}</TableCell>
+                    <TableCell>
+                      <PDFDownloadLink document={<OrderPDFDocument order={order} />} fileName={`order_${order.id}.pdf`}>
+                        <Button className="text-white text-xs bg-[#374C69] hover:bg-[#374C69]/90">Download PDF</Button>
+                      </PDFDownloadLink>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    Geen orders gevonden.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center">
-                  Geen orders gevonden.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
+              )}
+            </TableBody>
+          </Table>
+        )}
+      </div>
     </div>
   );
 }

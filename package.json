@@ -37,6 +37,7 @@
     "react-infinite-calendar": "^2.3.1",
     "react-spinners": "^0.14.1",
     "react-use": "^17.5.1",
+    "stripe": "^17.2.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.0"
