@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <main className="w-full flex-1 bg-[#ECF0F6] dark:bg-[#171717]">
         <Header />
-        <div className="overflow-hidden">{children}</div>
+        <div className="overflow-hidden max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
   );
