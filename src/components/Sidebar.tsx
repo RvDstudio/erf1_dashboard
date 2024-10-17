@@ -5,20 +5,45 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menus } from '@/constants/constants';
 import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const isActive = (path: string) => path === pathname;
   const [open, setOpen] = useState<boolean>(true);
+  const [filteredMenus, setFilteredMenus] = useState(Menus);
+  const supabase = createClient();
 
-  // Filter menus without admin status check
-  const filteredMenus = Menus; // Assuming no filtering is needed without session
+  useEffect(() => {
+    const fetchAdminStatus = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase.from('profiles').select('isAdmin').eq('id', user.id).single();
+
+        if (error) {
+          console.error('Error fetching user data:', error);
+        } else {
+          // Filter menus based on whether the user is an admin
+          setFilteredMenus(Menus.filter((menu) => !menu.isAdmin || data?.isAdmin));
+        }
+      } else {
+        // Redirect to login if user is not authenticated
+        setFilteredMenus([]);
+      }
+    };
+
+    fetchAdminStatus();
+  }, [supabase]);
+
+  const isActive = (path: string) => path === pathname;
 
   return (
     <div
       className={`${
-        open ? 'w-64 lg:w-72  hidden md:block' : 'w-18 hidden md:block'
+        open ? 'w-64 lg:w-72 hidden md:block' : 'w-18 hidden md:block'
       } bg-[#374C69] dark:bg-[#171717] border-r border-light-white dark:border-[#2e2e2e] p-4 pt-4 h-screen sticky top-0 duration-300 z-40`}
     >
       <ArrowLeftSquareIcon
@@ -39,7 +64,7 @@ const Sidebar = () => {
       <ul className="pt-4 space-y-4">
         {filteredMenus.map((menu, index) => (
           <div key={index}>
-            {menu.gap && <div className="my-4 border-t border-dashed border-[#26a865] dark:border-gray-600" />}
+            {menu.gap && <div className="my-4 border-t border-dashed border-[#6699CC] dark:border-gray-600" />}
             <li className="">
               <TooltipProvider>
                 <Tooltip>
