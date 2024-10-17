@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { useOrder } from '@/context/OrderContext';
 import { useTotalPrice } from '@/context/TotalPriceContext'; // Use this to get total price
 import { createClient } from '@/utils/supabase/client';
@@ -13,6 +14,7 @@ export default function Order() {
   const [errorMessage, setErrorMessage] = useState('');
   const [session, setSession] = useState<Session | null>(null); // Set the type as Session | null
   const supabase = createClient();
+  const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     const fetchSessionAndOrderData = async () => {
@@ -56,6 +58,7 @@ export default function Order() {
       if (response.ok) {
         setOrderSuccess(true);
         setErrorMessage('');
+        router.push('/dashboard/order_history'); // Redirect to order history after successful order
       } else {
         setErrorMessage(result.message);
       }
