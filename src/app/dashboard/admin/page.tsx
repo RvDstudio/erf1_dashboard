@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Switch } from '@/components/ui/switch';
 import clsx from 'clsx'; // To conditionally apply classes
 
 type Order = {
@@ -22,55 +21,36 @@ export default function AdminPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    const checkAdminAndFetchOrders = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    checkAdminAndFetchOrders();
+  }, []);
 
-      if (user) {
-        const { data, error } = await supabase.from('profiles').select('isAdmin').eq('id', user.id).single();
+  const checkAdminAndFetchOrders = async () => {
+    setLoading(true);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-        if (error || !data?.isAdmin) {
-          router.push('/'); // Redirect non-admin users to home
-          return;
-        }
+    if (user) {
+      const { data, error } = await supabase.from('profiles').select('isAdmin').eq('id', user.id).single();
 
-        // Fetch all orders from the database
-        const { data: ordersData, error: ordersError } = await supabase.from('orders').select('*');
-
-        if (ordersError) {
-          setError('Error fetching orders');
-        } else {
-          setOrders((ordersData || []) as Order[]);
-        }
-      } else {
-        router.push('/login'); // Redirect unauthenticated users to login
+      if (error || !data?.isAdmin) {
+        router.push('/'); // Redirect non-admin users to home
+        return;
       }
 
-      setLoading(false);
-    };
+      // Fetch all orders from the database
+      const { data: ordersData, error: ordersError } = await supabase.from('orders').select('*');
 
-    checkAdminAndFetchOrders();
-  }, [router, supabase]);
-
-  const handleStatusChange = async (orderId: string, newStatus: boolean) => {
-    // Update the order status in Supabase
-    const { error } = await supabase
-      .from('orders')
-      .update({ status: newStatus ? 'Betaald' : 'Niet betaald' })
-      .eq('id', orderId);
-
-    if (error) {
-      console.error('Error updating status:', error);
-      setError('Error updating status');
+      if (ordersError) {
+        setError('Error fetching orders');
+      } else {
+        setOrders((ordersData || []) as Order[]);
+      }
     } else {
-      // Update the local state
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === orderId ? { ...order, status: newStatus ? 'Betaald' : 'Niet betaald' } : order
-        )
-      );
+      router.push('/login'); // Redirect unauthenticated users to login
     }
+
+    setLoading(false);
   };
 
   if (loading) {
@@ -99,30 +79,15 @@ export default function AdminPage() {
               orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>{order.id}</TableCell>
-                  <TableCell>€{order.total_price}</TableCell>
-                  <TableCell className="flex items-center gap-2">
-                    {/* Left Text: "Niet betaald" */}
+                  <TableCell>€{order.total_price.toFixed(2)}</TableCell>
+                  <TableCell>
                     <span
                       className={clsx(
                         'text-sm font-medium',
-                        order.status === 'Niet betaald' ? 'text-red-500' : 'text-gray-500'
+                        order.status === 'Niet betaald' ? 'text-red-500' : 'text-green-500'
                       )}
                     >
-                      Niet betaald
-                    </span>
-                    {/* Switch Component */}
-                    <Switch
-                      checked={order.status === 'Betaald'}
-                      onCheckedChange={(checked) => handleStatusChange(order.id, checked)}
-                    />
-                    {/* Right Text: "Betaald" */}
-                    <span
-                      className={clsx(
-                        'text-sm font-medium',
-                        order.status === 'Betaald' ? 'text-green-500' : 'text-gray-500'
-                      )}
-                    >
-                      Betaald
+                      {order.status}
                     </span>
                   </TableCell>
                 </TableRow>
