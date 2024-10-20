@@ -4,15 +4,10 @@ import { createClient } from '@/utils/supabase/client';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2024-09-30',
 });
 
-export const config = {
-  api: {
-    bodyParser: false, // Disable automatic body parsing
-  },
-};
-
+// Function to parse the body as a buffer
 async function buffer(request: NextRequest): Promise<Buffer> {
   const readable = request.body;
   if (!readable) {
@@ -27,6 +22,11 @@ async function buffer(request: NextRequest): Promise<Buffer> {
   }
   return Buffer.concat(chunks);
 }
+
+// Middleware function to disable automatic parsing
+export const config = {
+  runtime: 'nodejs',
+};
 
 export async function POST(request: NextRequest) {
   const supabase = createClient();
