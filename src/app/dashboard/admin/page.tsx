@@ -1,7 +1,7 @@
 // Path: src\app\dashboard\admin\page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -20,11 +20,8 @@ export default function AdminPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  useEffect(() => {
-    checkAdminAndFetchOrders();
-  }, []);
-
-  const checkAdminAndFetchOrders = async () => {
+  // Wrap the function with useCallback to prevent it from changing between renders
+  const checkAdminAndFetchOrders = useCallback(async () => {
     setLoading(true);
     const {
       data: { user },
@@ -51,7 +48,11 @@ export default function AdminPage() {
     }
 
     setLoading(false);
-  };
+  }, [router, supabase]);
+
+  useEffect(() => {
+    checkAdminAndFetchOrders();
+  }, [checkAdminAndFetchOrders]);
 
   if (loading) {
     return <p>Loading...</p>;
