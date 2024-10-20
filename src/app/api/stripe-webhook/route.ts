@@ -24,9 +24,7 @@ async function buffer(request: NextRequest): Promise<Buffer> {
 }
 
 // Middleware function to disable automatic parsing
-export const config = {
-  runtime: `nodejs`,
-};
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   const supabase = createClient();
