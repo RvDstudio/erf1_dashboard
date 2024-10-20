@@ -19,7 +19,6 @@ export default function ZuivelProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
     const checkUserRole = async () => {
@@ -60,7 +59,6 @@ export default function ZuivelProducts() {
         console.log('User profile data:', data);
 
         if (data?.isUitgekookt && data?.isAdmin) {
-          setHasAccess(true);
           fetchProducts();
         } else {
           setError('Access denied');
