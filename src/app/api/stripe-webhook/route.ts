@@ -25,7 +25,7 @@ async function buffer(request: NextRequest): Promise<Buffer> {
 
 // Middleware function to disable automatic parsing
 export const config = {
-  runtime: `node${'js'}`,
+  runtime: `nodejs`,
 };
 
 export async function POST(request: NextRequest) {
