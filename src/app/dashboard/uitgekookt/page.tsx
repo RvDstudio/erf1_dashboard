@@ -12,6 +12,7 @@ type Product = {
   price: number;
   description: string;
   image_url: string;
+  category: string;
 };
 
 export default function ZuivelProducts() {
