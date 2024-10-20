@@ -8,6 +8,7 @@ interface MenuItem {
   gap?: boolean;
   path: string;
   isAdmin?: boolean; // Added isAdmin property
+  isUitgekookt?: boolean;
 }
 
 export const Menus: MenuItem[] = [
@@ -28,6 +29,13 @@ export const Menus: MenuItem[] = [
     notification: 0,
     icon: <ShoppingBag className="w-5 h-5" />,
     path: '/dashboard/products',
+  },
+  {
+    title: 'Producten Uitgekookt',
+    notification: 0,
+    icon: <ShoppingBag className="w-5 h-5" />,
+    path: '/dashboard/uitgekookt',
+    isUitgekookt: true,
   },
   {
     title: 'Orders',
