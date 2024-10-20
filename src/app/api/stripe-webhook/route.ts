@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2024-09-30',
+  apiVersion: '2024-09-30.acacia',
 });
 
 // Function to parse the body as a buffer
