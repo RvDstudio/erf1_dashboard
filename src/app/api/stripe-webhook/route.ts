@@ -3,9 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/client';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2024-09-30.acacia',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 // Function to parse the body as a buffer
 async function buffer(request: NextRequest): Promise<Buffer> {
