@@ -1,3 +1,4 @@
+// Path: src\app\login\oauth-signin.tsx
 'use client';
 import { Button } from '@/components/ui/button';
 import { Provider } from '@supabase/supabase-js';
@@ -13,18 +14,8 @@ type OAuthProvider = {
 export function OAuthButtons() {
   const oAuthProviders: OAuthProvider[] = [
     {
-      name: 'github' as Provider, // Cast the string to the correct Provider type
-      displayName: 'Github',
-      icon: <Github className="size-5" />,
-    },
-    {
       name: 'google' as Provider, // Cast the string to the correct Provider type
       displayName: 'Google',
-      icon: <Github className="size-5" />,
-    },
-    {
-      name: 'azure' as Provider, // Cast the string to the correct Provider type
-      displayName: 'Azure',
       icon: <Github className="size-5" />,
     },
   ];
